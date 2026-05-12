@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mongi — Your daily puzzle habit</title>
+  <meta name="description" content="Mongi is a daily puzzle game with 18 hand-crafted games across three categories: words, numbers, and colors. Fresh puzzles every morning." />
+
+  <link rel="icon" type="image/png" href="assets/mongi-icon.png" />
+  <link rel="apple-touch-icon" href="assets/mongi-icon.png" />
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Mongi — Your daily puzzle habit" />
+  <meta property="og:description" content="18 hand-crafted puzzle games across three daily categories: words, numbers, and colors." />
+  <meta property="og:image" content="https://mongi.app/assets/mongi-icon.png" />
+  <meta property="og:url" content="https://mongi.app" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root {
+      --mint-1: #14B8A6;
+      --mint-2: #2DD4BF;
+      --sunset-1: #F97316;
+      --sunset-2: #FB923C;
+      --rose: #FF6B9D;
+      --purple: #8B5CF6;
+
+      --ink: #0F172A;
+      --ink-2: #1F2937;
+      --muted: #475569;
+      --soft: #94A3B8;
+      --bg: #FFFFFF;
+      --surface: #F8FAFC;
+      --border: #E2E8F0;
+      --accent: var(--mint-1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, "SF Pro Display", "Segoe UI", Inter, Roboto, system-ui, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Top nav ─── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+    }
+    .brand img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover {
+      background: var(--surface);
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    @media (max-width: 640px) {
+      .nav-inner { padding: 12px 16px; }
+      .nav-links a { padding: 6px 8px; font-size: 13px; }
+      .brand { font-size: 18px; }
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ECFEFF 0%, #FFF7ED 60%, #FFEDD5 100%);
+      padding: 80px 0 120px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 25%, rgba(20, 184, 166, 0.18), transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(249, 115, 22, 0.18), transparent 45%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -2.5px;
+      margin: 0 0 18px 0;
+      color: var(--ink);
+    }
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--mint-1), var(--sunset-1));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p.lede {
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--ink-2);
+      margin: 0 0 32px 0;
+      max-width: 480px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    }
+    .badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+      text-decoration: none;
+    }
+    .badge .label { display: flex; flex-direction: column; line-height: 1.1; align-items: flex-start; }
+    .badge .label .small { font-size: 10px; font-weight: 500; opacity: 0.8; }
+    .badge.coming-soon { background: var(--surface); color: var(--muted); cursor: default; box-shadow: none; }
+    .badge.coming-soon:hover { transform: none; }
+
+    /* Hero phones */
+    .hero-phones {
+      position: relative;
+      height: 480px;
+    }
+    .hero-phone {
+      position: absolute;
+      border-radius: 28px;
+      background: #0a0a0a;
+      padding: 6px 4px;
+      box-shadow:
+        inset 0 0 0 1.5px rgba(255, 255, 255, 0.18),
+        0 24px 50px rgba(15, 23, 42, 0.22);
+      overflow: hidden;
+    }
+    .hero-phone img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 22px;
+      display: block;
+    }
+    .hero-phone-1 {
+      width: 200px;
+      height: 416px;
+      top: 30px;
+      left: 90px;
+      transform: rotate(-6deg);
+      z-index: 2;
+    }
+    .hero-phone-2 {
+      width: 200px;
+      height: 416px;
+      top: 50px;
+      right: 80px;
+      transform: rotate(6deg);
+      z-index: 1;
+    }
+
+    .mongoose-hero {
+      position: absolute;
+      right: -20px;
+      bottom: -40px;
+      width: 220px;
+      filter: drop-shadow(0 14px 22px rgba(15, 23, 42, 0.25));
+      transform: rotate(8deg);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    @media (max-width: 900px) {
+      .hero { padding: 56px 0 96px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero h1 { font-size: 44px; }
+      .hero p.lede { font-size: 17px; }
+      .hero-phones { height: 380px; }
+      .hero-phone-1 { width: 160px; height: 336px; left: 20%; }
+      .hero-phone-2 { width: 160px; height: 336px; right: 20%; }
+      .mongoose-hero { width: 140px; right: 4%; bottom: -10px; }
+    }
+
+    /* ─── Sections ─── */
+    section.s {
+      padding: 80px 0;
+    }
+
+    section.s.alt {
+      background: var(--surface);
+    }
+
+    section.s h2 {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin: 0 0 8px 0;
+      color: var(--ink);
+    }
+
+    section.s .kicker {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 12px 0;
+    }
+
+    section.s p.section-lede {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 0 48px 0;
+    }
+
+    /* ─── Features grid ─── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .feature {
+      padding: 28px 24px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .feature:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      border-color: rgba(20, 184, 166, 0.3);
+    }
+
+    .feature .ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+    .feature .ico.w { background: linear-gradient(135deg, #8B5CF6, #A78BFA); color: white; }
+    .feature .ico.n { background: linear-gradient(135deg, #FF6B9D, #FF8FAB); color: white; }
+    .feature .ico.c { background: linear-gradient(135deg, #14B8A6, #2DD4BF); color: white; }
+    .feature .ico.s { background: linear-gradient(135deg, #F97316, #FB923C); color: white; }
+
+    .feature h3 {
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0 0 8px 0;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+    .feature p {
+      font-size: 15px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* ─── Games list ─── */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .games-cat {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .games-cat h3 {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin: 0 0 16px 0;
+    }
+    .games-cat.w h3 { color: var(--purple); }
+    .games-cat.n h3 { color: var(--rose); }
+    .games-cat.c h3 { color: var(--mint-1); }
+    .games-cat ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .games-cat li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--surface);
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+    .games-cat li:last-child { border-bottom: none; }
+    .games-cat li strong {
+      color: var(--ink);
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    @media (max-width: 720px) {
+      .games-grid { grid-template-columns: 1fr; }
+      section.s { padding: 56px 0; }
+      section.s h2 { font-size: 28px; }
+    }
+
+    /* ─── Support FAQ ─── */
+    .faq {
+      max-width: 760px;
+    }
+    .faq details {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.15s;
+    }
+    .faq details[open] { box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06); }
+    .faq summary {
+      padding: 18px 22px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: 16px;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: "+";
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--muted);
+      transition: transform 0.15s;
+    }
+    .faq details[open] summary::after { content: "\2212"; }
+    .faq .answer {
+      padding: 0 22px 22px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .faq .answer p:first-child { margin-top: 0; }
+
+    /* ─── Contact card ─── */
+    .contact-card {
+      background: linear-gradient(135deg, var(--ink) 0%, var(--ink-2) 100%);
+      color: #fff;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 760px;
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
+    }
+    .contact-card h3 {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+    }
+    .contact-card p {
+      font-size: 15px;
+      opacity: 0.85;
+      margin: 0;
+    }
+    .contact-card a.cta {
+      display: inline-block;
+      padding: 12px 22px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      transition: transform 0.15s;
+    }
+    .contact-card a.cta:hover { transform: translateY(-2px); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .contact-card { grid-template-columns: 1fr; padding: 28px; }
+    }
+
+    /* ─── Privacy / policy text ─── */
+    .policy {
+      max-width: 760px;
+    }
+    .policy h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 32px 0 8px 0;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+    .policy p {
+      font-size: 15.5px;
+      color: var(--ink-2);
+      margin: 0 0 14px 0;
+      line-height: 1.65;
+    }
+    .policy ul {
+      padding-left: 22px;
+      margin: 0 0 14px 0;
+    }
+    .policy li {
+      font-size: 15.5px;
+      color: var(--ink-2);
+      margin: 4px 0;
+      line-height: 1.55;
+    }
+    .policy .updated {
+      font-size: 14px;
+      color: var(--soft);
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      background: var(--ink);
+      color: rgba(255, 255, 255, 0.75);
+      padding: 56px 0 32px;
+      font-size: 14px;
+    }
+    footer .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 36px;
+    }
+    footer h4 {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #fff;
+      margin: 0 0 14px 0;
+    }
+    footer ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    footer li { margin: 6px 0; }
+    footer a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+    }
+    footer a:hover { color: #fff; }
+    footer .brand-foot {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      font-weight: 900;
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+    footer .brand-foot img { width: 36px; height: 36px; border-radius: 8px; }
+    footer .desc { max-width: 360px; line-height: 1.5; }
+    footer .bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 720px) {
+      footer .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      footer .bottom { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Top navigation ─── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <img src="assets/mongi-icon.png" alt="" />
+      Mongi
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#games">Games</a>
+      <a href="#support">Support</a>
+      <a href="#privacy">Privacy</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── Hero ─── -->
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <h1>Your daily<br/>puzzle <span class="accent">habit.</span></h1>
+      <p class="lede">
+        18 hand-crafted games across three categories — words, numbers, and colors.
+        Fresh puzzles every morning. Build streaks, earn rest days, never lose progress.
+      </p>
+      <div class="badges">
+        <a class="badge coming-soon">
+          <span class="label">
+            <span class="small">Coming to</span>
+            <span>App Store</span>
+          </span>
+        </a>
+        <a class="badge coming-soon">
+          <span class="label">
+            <span class="small">Coming to</span>
+            <span>Google Play</span>
+          </span>
+        </a>
+        <a class="badge coming-soon">
+          <span class="label">
+            <span class="small">Available on</span>
+            <span>AppGallery</span>
+          </span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-phones">
+      <div class="hero-phone hero-phone-1">
+        <img src="assets/screenshot-english.jpg" alt="Mongi home screen showing 6 word games" />
+      </div>
+      <div class="hero-phone hero-phone-2">
+        <img src="assets/screenshot-numbers.jpg" alt="Mongi home screen showing 6 number games" />
+      </div>
+      <img class="mongoose-hero" src="assets/mongoose-dance.png" alt="" />
+    </div>
+  </div>
+</header>
+
+<!-- ─── Features ─── -->
+<section class="s" id="features">
+  <div class="container">
+    <p class="kicker">What you get</p>
+    <h2>Built for the daily habit.</h2>
+    <p class="section-lede">
+      Three categories of six games each. Pick the ones you want to play.
+      Switch anytime. Each category is a complete daily experience.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <div class="ico w">A</div>
+        <h3>18 hand-crafted games</h3>
+        <p>Six word games, six math &amp; logic games, six color &amp; pattern games. Each with a unique mechanic.</p>
+      </div>
+      <div class="feature">
+        <div class="ico n">★</div>
+        <h3>Fresh every day</h3>
+        <p>Daily puzzles seeded from the date. Today's puzzle is the same for everyone — race friends to the top score.</p>
+      </div>
+      <div class="feature">
+        <div class="ico c">♥</div>
+        <h3>Streaks that hold</h3>
+        <p>Build a daily streak across all your games. Win 6+ games in a day to earn rest day shields for when life gets busy.</p>
+      </div>
+      <div class="feature">
+        <div class="ico s">◆</div>
+        <h3>10 beautiful themes</h3>
+        <p>Five clean themes plus five immersive themes with ambient particle effects — Space, Forest, Deep Sea, Snow, Volcano.</p>
+      </div>
+      <div class="feature">
+        <div class="ico w">M</div>
+        <h3>Your mongoose avatar</h3>
+        <p>14-layer customizable mongoose with millions of unique combinations. Hair, eyes, fur patterns, accessories.</p>
+      </div>
+      <div class="feature">
+        <div class="ico n">⚡</div>
+        <h3>Local-first, offline-ready</h3>
+        <p>Play without an account. Scores save locally. Sign in to sync across devices and play with friends.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Games list ─── -->
+<section class="s alt" id="games">
+  <div class="container">
+    <p class="kicker">The lineup</p>
+    <h2>Three categories. Six games each.</h2>
+    <p class="section-lede">
+      Each category is a self-contained daily experience worth 9,000 points (6 games &times; 1,500 max). Switch with one tap.
+    </p>
+
+    <div class="games-grid">
+      <div class="games-cat w">
+        <h3>Word Games</h3>
+        <ul>
+          <li><strong>Hinto</strong> Guess the 5-letter word</li>
+          <li><strong>Kinship</strong> Group 16 words into 4 categories</li>
+          <li><strong>Anagram</strong> Unscramble letters into words</li>
+          <li><strong>Crossword</strong> Fill the mini grid from clues</li>
+          <li><strong>Word Snake</strong> Trace a connected path of words</li>
+          <li><strong>Cipher</strong> Crack the substitution code</li>
+        </ul>
+      </div>
+      <div class="games-cat n">
+        <h3>Numbers &amp; Logic</h3>
+        <ul>
+          <li><strong>Nixnum</strong> Cross out numbers to hit row/col targets</li>
+          <li><strong>Target</strong> Reach the target with the numbers given</li>
+          <li><strong>MathPath</strong> Trace a path that adds up</li>
+          <li><strong>NumCross</strong> A crossword, but with digits</li>
+          <li><strong>CageCalc</strong> Make every cage add up just right</li>
+          <li><strong>Shikaku</strong> Slice the grid into neat rectangles</li>
+        </ul>
+      </div>
+      <div class="games-cat c">
+        <h3>Colors &amp; Patterns</h3>
+        <ul>
+          <li><strong>Codeweave</strong> Route colored threads to fill the grid</li>
+          <li><strong>Mosaic</strong> Solve a color nonogram puzzle</li>
+          <li><strong>Tincture</strong> Color the map so no neighbors match</li>
+          <li><strong>Duet</strong> Balance two colors on a grid</li>
+          <li><strong>Volley</strong> Set ball directions for a chain reaction</li>
+          <li><strong>Flood</strong> Flood the board with one color</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Support ─── -->
+<section class="s" id="support">
+  <div class="container">
+    <p class="kicker">Need help?</p>
+    <h2>Support &amp; FAQ</h2>
+    <p class="section-lede">
+      Common questions about Mongi. If you can't find an answer here, get in touch — we read every message.
+    </p>
+
+    <div class="faq">
+      <details>
+        <summary>How do I find all 18 games?</summary>
+        <div class="answer">
+          <p>Mongi organizes 18 games into 3 categories (Word, Numbers, Colors), each containing 6 games. The pill-shaped tabs at the top of the home screen let you switch between categories. Tap any pill ("English", "Numbers", "Colors") to see that category's 6 games. You can also add or remove categories from Settings &rarr; My Game Categories.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Why are the games split into categories?</summary>
+        <div class="answer">
+          <p>Each game has a maximum daily score of 1,500 points, so the per-category daily maximum is 9,000 points. Leaderboards are per category — you only need to play one category to compete for a top spot. The structure also makes it easy to add more languages later (French, German, Swedish, Chinese coming).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Do I need an account to play?</summary>
+        <div class="answer">
+          <p>No. Mongi is fully playable without an account — all 18 games, streaks, stats, avatar customization, and themes work offline. Sign in (with Apple, Google, or Facebook) only if you want to sync scores across devices, add friends, or compete on leaderboards.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>What's a rest day?</summary>
+        <div class="answer">
+          <p>If you win 6+ games in a day without losing, you earn a "rest day" shield (max 2 stored). On days you don't play, a shield is automatically consumed to protect your streak. It's there for the busy days when life gets in the way.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>How do I delete my account and data?</summary>
+        <div class="answer">
+          <p>Sign in, go to Settings &rarr; Profile, scroll to the bottom, and tap "Delete Account". This permanently removes your profile, scores, friendships, and all other personal data from our servers. You can also email <a href="mailto:oskar@jadecircuit.com">oskar@jadecircuit.com</a> to request deletion.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>What platforms does Mongi run on?</summary>
+        <div class="answer">
+          <p>Mongi is built for iOS, Android, and HarmonyOS NEXT. It works on phones and tablets. A web version is in development.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Are there ads or in-app purchases?</summary>
+        <div class="answer">
+          <p>Not in v1. Mongi is free with no ads on the puzzles themselves and no paywalls on any of the 18 games. We may introduce optional cosmetic upgrades or an ad-supported "unlimited mode" in future versions, but the daily puzzle experience will always be free.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>I found a bug or have a feature request.</summary>
+        <div class="answer">
+          <p>Please email <a href="mailto:oskar@jadecircuit.com">oskar@jadecircuit.com</a> with the device model, OS version, and what happened. Screenshots help. We typically respond within 24 hours.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="contact-card">
+      <div>
+        <h3>Still stuck?</h3>
+        <p>Drop a line and we'll get back to you within 24 hours, usually faster.</p>
+      </div>
+      <a class="cta" href="mailto:oskar@jadecircuit.com">Contact support</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Privacy Policy ─── -->
+<section class="s alt" id="privacy">
+  <div class="container">
+    <p class="kicker">Your data</p>
+    <h2>Privacy Policy</h2>
+    <p class="section-lede">
+      Mongi is built local-first. Most data stays on your device. When you sign in, here's exactly what we collect and how we use it.
+    </p>
+
+    <div class="policy">
+      <p class="updated">Last updated: 12 May 2026 &middot; Data controller: Jade Circuit O&Uuml;, Estonia (EU)</p>
+
+      <h3>1. What we collect</h3>
+      <p>When you use Mongi without an account, no personal data is sent to our servers — everything is stored on your device. When you sign in, we may collect:</p>
+      <ul>
+        <li><strong>Account information:</strong> your name, email address, and profile photo from your sign-in provider (Apple, Google, or Facebook).</li>
+        <li><strong>Game data:</strong> scores, streaks, statistics, achievements, and game progress.</li>
+        <li><strong>Friend connections:</strong> friend codes and friend lists if you use the social features.</li>
+        <li><strong>Avatar configuration:</strong> your custom mongoose avatar settings.</li>
+        <li><strong>Push-notification tokens:</strong> if you enable streak reminders.</li>
+        <li><strong>Crash reports:</strong> anonymous diagnostic data for bug fixing — no personal data included.</li>
+      </ul>
+
+      <h3>2. How we use it</h3>
+      <ul>
+        <li>Save your scores and progress across devices</li>
+        <li>Show your ranking on leaderboards and weekly leagues</li>
+        <li>Maintain your streak and game history</li>
+        <li>Enable friend connections and score sharing</li>
+        <li>Send streak-reminder notifications (if enabled)</li>
+        <li>Improve the app through crash reports</li>
+      </ul>
+
+      <h3>3. Where your data is stored</h3>
+      <p>
+        Your data is stored in <strong>Google Firebase</strong> (Cloud Firestore),
+        hosted in the EU (<code>europe-west1</code> region, Belgium). Firebase is operated by Google
+        and subject to Google's security and privacy standards. Authentication is handled by Firebase
+        Authentication. Local data lives on your device using secure platform storage.
+      </p>
+
+      <h3>4. Third-party services</h3>
+      <ul>
+        <li><strong>Google Firebase</strong> (Firestore, Authentication, Cloud Functions) — data storage, accounts, server-side logic</li>
+        <li><strong>Sign in with Apple</strong> — optional sign-in method (iOS)</li>
+        <li><strong>Google Sign-In</strong> — optional sign-in method</li>
+        <li><strong>Facebook Login</strong> — optional sign-in method</li>
+        <li><strong>Firebase Crashlytics</strong> — anonymous crash reports</li>
+      </ul>
+
+      <h3>5. Data retention &amp; deletion</h3>
+      <p>
+        We keep your data while your account is active. You can delete your account and all associated data
+        anytime from <strong>Settings &rarr; Profile &rarr; Delete Account</strong>. This permanently removes
+        your profile, scores, friendships, and all other personal data from our servers. If your account is
+        inactive for over 24 months, we may remove your data automatically.
+      </p>
+
+      <h3>6. Data sharing</h3>
+      <p>
+        We do not sell your data. Your display name, avatar, and scores may be visible to other players
+        through leaderboards, weekly leagues, and friend connections. Data is processed by Google Firebase
+        as described above. We do not share data with advertisers in the current release.
+      </p>
+
+      <h3>7. Your rights (GDPR)</h3>
+      <p>Under EU law, you have the right to:</p>
+      <ul>
+        <li>Access your personal data</li>
+        <li>Correct inaccurate data (edit your profile in the app)</li>
+        <li>Delete your data (Settings &rarr; Profile &rarr; Delete Account, or email us)</li>
+        <li>Export your data (email us for a data export)</li>
+        <li>Object to data processing (email us)</li>
+      </ul>
+      <p>For any privacy request, email <a href="mailto:oskar@jadecircuit.com">oskar@jadecircuit.com</a>.</p>
+
+      <h3>8. Children</h3>
+      <p>
+        Mongi is not directed at children under 13. We do not knowingly collect data from children under 13.
+        If you believe a child has created an account, contact us at
+        <a href="mailto:oskar@jadecircuit.com">oskar@jadecircuit.com</a> and we will delete the account.
+      </p>
+
+      <h3>9. Changes to this policy</h3>
+      <p>
+        We will notify you in-app and ask for fresh consent if we make material changes to this policy.
+      </p>
+
+      <h3>10. Contact</h3>
+      <p>
+        Data controller: Jade Circuit O&Uuml;, Estonia, EU<br/>
+        Email: <a href="mailto:oskar@jadecircuit.com">oskar@jadecircuit.com</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ─── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brand-foot">
+          <img src="assets/mongi-icon.png" alt="" />
+          Mongi
+        </div>
+        <p class="desc">
+          A daily puzzle game from Jade Circuit O&Uuml; in Tallinn, Estonia.
+          18 games across 3 categories. Fresh every morning.
+        </p>
+      </div>
+
+      <div>
+        <h4>App</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#games">Games</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#support">Support</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="mailto:oskar@jadecircuit.com">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div>&copy; 2026 Jade Circuit O&Uuml;. All rights reserved.</div>
+      <div>Made with care in Tallinn, EE</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
