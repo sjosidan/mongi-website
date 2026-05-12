@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy (HarmonyOS) — Mongi</title>
+  <meta name="description" content="Privacy Policy for Mongi on HarmonyOS — what data we collect, how we use it, your rights." />
+  <link rel="icon" type="image/png" href="../../assets/mongi-icon.png" />
+
+  <style>
+    :root {
+      --mint-1: #14B8A6; --sunset-1: #F97316;
+      --ink: #0F172A; --ink-2: #1F2937;
+      --muted: #475569; --soft: #94A3B8;
+      --bg: #FFFFFF; --surface: #F8FAFC; --border: #E2E8F0;
+      --accent: var(--mint-1);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--ink);
+      font-family: -apple-system, "SF Pro Display", "Segoe UI", Inter, Roboto, system-ui, sans-serif;
+      line-height: 1.55; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .container.narrow { max-width: 760px; }
+
+    .nav { position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(180%) blur(12px);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid var(--border); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px; max-width: 1100px; margin: 0 auto; }
+    .brand { display: flex; align-items: center; gap: 10px;
+      font-weight: 900; font-size: 22px; color: var(--ink); letter-spacing: -0.5px; }
+    .brand img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-links { display: flex; gap: 6px; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 600; font-size: 14px;
+      padding: 8px 12px; border-radius: 8px; }
+    .nav-links a:hover { background: var(--surface); color: var(--ink); text-decoration: none; }
+    .nav-links a.active { color: var(--accent); background: rgba(20,184,166,0.08); }
+
+    .crumbs { font-size: 13px; color: var(--soft); margin-bottom: 8px; }
+    .crumbs a { color: var(--soft); font-weight: 600; }
+    .crumbs a:hover { color: var(--accent); }
+
+    section.s { padding: 56px 0 80px; }
+    .kicker { font-size: 13px; font-weight: 800; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--accent); margin: 0 0 12px 0; }
+    h1 { font-size: 44px; font-weight: 900; letter-spacing: -1.3px;
+      margin: 0 0 16px 0; line-height: 1.05; }
+    .platform-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: linear-gradient(135deg, #DC2626, #F97316);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .updated { font-size: 14px; color: var(--soft);
+      font-style: italic; margin: 0 0 32px 0; }
+
+    .policy h2 {
+      font-size: 22px; font-weight: 800;
+      margin: 32px 0 10px 0; color: var(--ink); letter-spacing: -0.3px;
+    }
+    .policy p { font-size: 15.5px; color: var(--ink-2);
+      margin: 0 0 14px 0; line-height: 1.65; }
+    .policy ul { padding-left: 22px; margin: 0 0 14px 0; }
+    .policy li { font-size: 15.5px; color: var(--ink-2);
+      margin: 4px 0; line-height: 1.55; }
+
+    .callout {
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 24px 0;
+    }
+    .callout p { margin: 0; font-size: 15px; color: var(--ink-2); }
+    .callout strong { color: var(--ink); }
+
+    footer {
+      background: var(--ink); color: rgba(255, 255, 255, 0.75);
+      padding: 56px 0 32px; font-size: 14px;
+    }
+    footer .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px; margin-bottom: 36px;
+    }
+    footer h4 { font-size: 13px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #fff; margin: 0 0 14px 0; }
+    footer ul { list-style: none; padding: 0; margin: 0; }
+    footer li { margin: 6px 0; }
+    footer a { color: rgba(255, 255, 255, 0.7); text-decoration: none; }
+    footer a:hover { color: #fff; }
+    footer .brand-foot { display: flex; align-items: center; gap: 12px; color: #fff;
+      font-weight: 900; font-size: 22px; margin-bottom: 14px; }
+    footer .brand-foot img { width: 36px; height: 36px; border-radius: 8px; }
+    footer .desc { max-width: 360px; line-height: 1.5; }
+    footer .bottom { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; color: rgba(255, 255, 255, 0.5); }
+
+    @media (max-width: 720px) {
+      h1 { font-size: 32px; }
+      section.s { padding: 40px 0 64px; }
+      footer .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      footer .bottom { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="brand">
+      <img src="../../assets/mongi-icon.png" alt="" />
+      Mongi
+    </a>
+    <div class="nav-links">
+      <a href="../../#features">Features</a>
+      <a href="../../#games">Games</a>
+      <a href="../../#support">Support</a>
+      <a href="../" class="active">Privacy</a>
+    </div>
+  </div>
+</nav>
+
+<section class="s">
+  <div class="container narrow">
+    <p class="crumbs"><a href="../">Privacy</a> &rsaquo; HarmonyOS</p>
+    <span class="platform-tag">HARMONYOS</span>
+    <h1>Privacy Policy — HarmonyOS</h1>
+    <p class="updated">Last updated: 12 May 2026 &middot; Data controller: Jade Circuit O&Uuml;, Estonia (EU)</p>
+
+    <div class="policy">
+      <div class="callout">
+        <p>
+          This policy applies to <strong>Mongi for HarmonyOS NEXT</strong>, distributed via Huawei AppGallery. For other platforms see
+          <a href="../ios/">iOS</a> or <a href="../android/">Android</a>.
+        </p>
+      </div>
+
+      <p>
+        Mongi is a daily puzzle game developed by Jade Circuit O&Uuml; (Estonia, EU). This policy explains what data we collect on HarmonyOS,
+        how we use it, and your rights. Mongi for HarmonyOS uses Huawei platform services for sign-in and notifications, and Google Firebase
+        (EU region) for data storage.
+      </p>
+
+      <h2>1. What we collect</h2>
+      <p>When you use Mongi without an account, no personal data is sent to our servers — everything is stored on your device. When you sign in, we may collect:</p>
+      <ul>
+        <li><strong>Account information:</strong> your display name and an anonymized identifier (Open Device ID) provided by Huawei Account Kit. We do not receive your Huawei ID email unless you explicitly share it.</li>
+        <li><strong>Game data:</strong> scores, streaks, statistics, achievements, and game progress.</li>
+        <li><strong>Friend connections:</strong> friend codes and friend lists if you use the social features.</li>
+        <li><strong>Avatar configuration:</strong> your custom mongoose avatar settings.</li>
+        <li><strong>Push-notification tokens:</strong> if you enable streak reminders, via Huawei Push Kit.</li>
+        <li><strong>Crash reports:</strong> anonymous diagnostic data for bug fixing via HiLog &mdash; no personal data included.</li>
+      </ul>
+
+      <h2>2. HarmonyOS-specific considerations</h2>
+      <ul>
+        <li><strong>Huawei Account Kit:</strong> Mongi uses Huawei Account Kit for sign-in. We receive an Open Device ID (ODID) and the display name you choose. We do not receive your phone number or email.</li>
+        <li><strong>Anonymous sign-in:</strong> If you prefer not to use a Huawei ID, Mongi supports anonymous sign-in. All gameplay features work; only friends and leaderboards require an identified account.</li>
+        <li><strong>Huawei Push Kit:</strong> if you enable streak reminders, Mongi registers a push token with Huawei Push Kit. Notifications are sent through Huawei's infrastructure.</li>
+        <li><strong>Permissions:</strong> Mongi requests <code>ohos.permission.INTERNET</code> for cloud sync. The camera and photo-library permissions are only requested when you actively use the QR-scan or share features.</li>
+        <li><strong>No advertising:</strong> Mongi does not currently show advertisements on HarmonyOS and does not access any advertising identifier.</li>
+      </ul>
+
+      <h2>3. How we use it</h2>
+      <ul>
+        <li>Save your scores and progress across devices</li>
+        <li>Show your ranking on leaderboards and weekly leagues</li>
+        <li>Maintain your streak and game history</li>
+        <li>Enable friend connections and score sharing</li>
+        <li>Send streak-reminder notifications (if enabled)</li>
+        <li>Improve the app through crash reports</li>
+      </ul>
+
+      <h2>4. Where your data is stored</h2>
+      <p>
+        Your data is stored in <strong>Google Firebase</strong> (Cloud Firestore), hosted in the EU
+        (<code>europe-west1</code> region, Belgium). Firebase is operated by Google and subject to Google's security and privacy standards.
+        Authentication identifiers from Huawei Account Kit are mapped to internal user records in Firebase. Local data lives on your
+        device using HarmonyOS Preferences API (encrypted at rest).
+      </p>
+
+      <h2>5. Third-party services</h2>
+      <ul>
+        <li><strong>Huawei Account Kit</strong> &mdash; sign-in via your Huawei ID (optional)</li>
+        <li><strong>Huawei Push Kit</strong> &mdash; push notifications (if you enable streak reminders)</li>
+        <li><strong>Google Firebase</strong> (Firestore, Cloud Functions) &mdash; data storage and server-side logic, hosted in the EU</li>
+      </ul>
+
+      <h2>6. Data retention &amp; deletion</h2>
+      <p>
+        We keep your data while your account is active. You can delete your account and all associated data
+        anytime from <strong>Settings &rarr; Profile &rarr; Delete Account</strong> within the HarmonyOS app. This permanently removes
+        your profile, scores, friendships, and all other personal data from our servers. You can also request deletion
+        by emailing <a href="mailto:support@jadecircuit.com">support@jadecircuit.com</a>. If your account is
+        inactive for over 24 months, we may remove your data automatically.
+      </p>
+
+      <h2>7. Data sharing</h2>
+      <p>
+        We do not sell your data. Your display name, avatar, and scores may be visible to other players
+        through leaderboards, weekly leagues, and friend connections. Data is processed by Google Firebase
+        as described above. We do not share data with advertisers in the current HarmonyOS release.
+      </p>
+
+      <h2>8. Your rights (GDPR)</h2>
+      <p>Under EU law, you have the right to:</p>
+      <ul>
+        <li>Access your personal data</li>
+        <li>Correct inaccurate data (edit your profile in the app)</li>
+        <li>Delete your data (Settings &rarr; Profile &rarr; Delete Account, or email us)</li>
+        <li>Export your data (email us for a data export)</li>
+        <li>Object to data processing (email us)</li>
+      </ul>
+      <p>For any privacy request, email <a href="mailto:support@jadecircuit.com">support@jadecircuit.com</a>.</p>
+
+      <h2>9. Children</h2>
+      <p>
+        Mongi is not directed at children under 13. We do not knowingly collect data from children under 13.
+        If you believe a child has created an account, contact us at
+        <a href="mailto:support@jadecircuit.com">support@jadecircuit.com</a> and we will delete the account.
+      </p>
+
+      <h2>10. Changes to this policy</h2>
+      <p>We will notify you in-app and ask for fresh consent if we make material changes to this policy.</p>
+
+      <h2>11. Contact</h2>
+      <p>
+        Data controller: Jade Circuit O&Uuml;, Estonia, EU<br/>
+        Email: <a href="mailto:support@jadecircuit.com">support@jadecircuit.com</a><br/>
+        Company: <a href="https://www.jadecircuit.com" target="_blank" rel="noopener">www.jadecircuit.com</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brand-foot">
+          <img src="../../assets/mongi-icon.png" alt="" />
+          Mongi
+        </div>
+        <p class="desc">
+          A daily puzzle game from Jade Circuit O&Uuml; in Tallinn, Estonia.
+          18 games across 3 categories. Fresh every morning.
+        </p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul>
+          <li><a href="../../#features">Features</a></li>
+          <li><a href="../../#games">Games</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="../../#support">Support</a></li>
+          <li><a href="../">Privacy hub</a></li>
+          <li><a href="../ios/">Privacy (iOS)</a></li>
+          <li><a href="../android/">Privacy (Android)</a></li>
+          <li><a href="../harmonyos/">Privacy (HarmonyOS)</a></li>
+          <li><a href="mailto:support@jadecircuit.com">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom">
+      <div>&copy; 2026 <a href="https://www.jadecircuit.com" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.85);">Jade Circuit O&Uuml;</a>. All rights reserved.</div>
+      <div>Made with care in Tallinn, EE</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
