@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Changelog — Mongi</title>
+  <meta name="description" content="What's new in Mongi across iOS, Android, HarmonyOS, and the web demo." />
+
+  <link rel="icon" type="image/png" href="../assets/mongi-icon.png" />
+  <link rel="apple-touch-icon" href="../assets/mongi-icon.png" />
+
+  <style>
+    :root {
+      --mint-1: #14B8A6;
+      --mint-2: #2DD4BF;
+      --rose: #FF6B9D;
+      --ink: #0F172A;
+      --ink-2: #1F2937;
+      --muted: #475569;
+      --soft: #94A3B8;
+      --bg: #FFFFFF;
+      --surface: #F8FAFC;
+      --border: #E2E8F0;
+      --accent: var(--mint-1);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, "SF Pro Display", "Segoe UI", Inter, Roboto, system-ui, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+    /* ─── Top nav ─── */
+    .nav {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav .row {
+      display: flex; align-items: center; gap: 12px;
+      max-width: 860px; margin: 0 auto; padding: 0 24px;
+    }
+    .nav img { width: 28px; height: 28px; border-radius: 6px; }
+    .nav .brand { font-weight: 700; font-size: 17px; color: var(--ink); }
+    .nav .back {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      padding: 56px 0 32px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+    .header h1 {
+      font-size: 40px;
+      font-weight: 800;
+      margin: 0 0 12px 0;
+      letter-spacing: -0.5px;
+    }
+    .header p {
+      font-size: 17px;
+      color: var(--muted);
+      margin: 0;
+      max-width: 600px;
+    }
+
+    /* ─── Entries ─── */
+    .entry {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .entry:last-child { border-bottom: 0; }
+    .entry-date {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin: 0 0 6px 0;
+    }
+    .entry h2 {
+      font-size: 26px;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+      letter-spacing: -0.3px;
+    }
+    .platform-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .platform-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-2);
+    }
+    .platform-badge .icon {
+      font-size: 14px;
+    }
+    .platform-badge .version {
+      color: var(--muted);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .entry ul {
+      margin: 0;
+      padding-left: 22px;
+    }
+    .entry li {
+      margin: 8px 0;
+      color: var(--ink-2);
+    }
+    .entry li strong {
+      color: var(--ink);
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      margin-top: 64px;
+      padding: 32px 0;
+      background: var(--ink);
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      text-align: center;
+    }
+    footer a { color: rgba(255,255,255,0.85); }
+
+    @media (max-width: 640px) {
+      .header { padding: 32px 0 24px; }
+      .header h1 { font-size: 32px; }
+      .entry h2 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="row">
+    <img src="../assets/mongi-icon.png" alt="" />
+    <span class="brand"><a href="../" style="color: var(--ink);">Mongi</a></span>
+    <a class="back" href="../">← Back to home</a>
+  </div>
+</nav>
+
+<section class="header">
+  <div class="container">
+    <h1>What's new in Mongi</h1>
+    <p>
+      A running log of releases across iOS, Android, HarmonyOS, and the web demo.
+      Newest first.
+    </p>
+  </div>
+</section>
+
+<main class="container">
+
+  <!-- ───────── 2026-05-15 ───────── -->
+  <article class="entry">
+    <p class="entry-date">May 15, 2026</p>
+    <h2>Target tune-up + sign-in polish + web demo launch</h2>
+    <div class="platform-row">
+      <span class="platform-badge"><span class="icon">🍎</span> iOS <span class="version">1.0.1</span></span>
+      <span class="platform-badge"><span class="icon">🤖</span> Android <span class="version">1.0.1+31</span></span>
+      <span class="platform-badge"><span class="icon">📦</span> HarmonyOS <span class="version">1.0.2 (1000005)</span></span>
+      <span class="platform-badge"><span class="icon">🌐</span> Web <span class="version">mongi.app/play</span></span>
+    </div>
+    <ul>
+      <li><strong>Target game:</strong> backing out with one number left no longer auto-finishes the game — your progress is saved.</li>
+      <li><strong>Target game:</strong> close-but-not-exact submissions now show a confirmation dialog with the partial score you'd lock in. Bullseyes always pay at least 1000 points.</li>
+      <li><strong>Sign-in:</strong> a full-screen spinner now appears immediately when you tap Google or Apple, so it's clear something is happening.</li>
+      <li><strong>Sign-in screen:</strong> fixed a stray strip of unthemed color at the bottom.</li>
+      <li><strong>Web demo launched</strong> at <a href="/play/">mongi.app/play</a> — no signup, unlimited replays, physical keyboard works for Lingo / Anagram / Crossword / Hangman / Equadle / NumCross / CageCalc.</li>
+      <li><strong>About page:</strong> displayed version now matches the actual app version.</li>
+    </ul>
+  </article>
+
+  <!-- ───────── 2026-05 (earlier) ───────── -->
+  <article class="entry">
+    <p class="entry-date">May 2026</p>
+    <h2>Categories management + first-launch welcome</h2>
+    <div class="platform-row">
+      <span class="platform-badge"><span class="icon">🍎</span> iOS <span class="version">1.0.0 (30)</span></span>
+      <span class="platform-badge"><span class="icon">🤖</span> Android <span class="version">1.0.0 (29-30)</span></span>
+      <span class="platform-badge"><span class="icon">📦</span> HarmonyOS <span class="version">1.0.1 (1000004)</span></span>
+    </div>
+    <ul>
+      <li><strong>Welcome modal</strong> on first launch explains the three-category structure (Words / Math / Colors) and lets you pick the ones you want to play.</li>
+      <li><strong>Settings → My Categories</strong> for adding or removing categories any time.</li>
+      <li><strong>iOS:</strong> first App Store submission, iPhone-only.</li>
+      <li><strong>Android:</strong> Open Testing launched on Google Play, then promoted to production.</li>
+    </ul>
+  </article>
+
+  <!-- ───────── 2026-04-13 ───────── -->
+  <article class="entry">
+    <p class="entry-date">April 13, 2026</p>
+    <h2>Polish + sync fixes</h2>
+    <div class="platform-row">
+      <span class="platform-badge"><span class="icon">📦</span> HarmonyOS <span class="version">1.0.1 (1000003)</span></span>
+    </div>
+    <ul>
+      <li><strong>Cross-device score sync</strong> now correctly handles math and colors categories. (Previously they'd silently come back as English after a login sync.)</li>
+      <li><strong>Friends head-to-head</strong> now spans every category you both play, with a small flag badge to keep the same game in different categories distinct.</li>
+      <li><strong>Stats All Time</strong> now combines daily + unlimited (was unlimited-only).</li>
+      <li><strong>CageCalc:</strong> Reset has a confirmation dialog, conflict detection is more accurate.</li>
+      <li><strong>Cipher / Nixnum / Target / Crossword:</strong> timer starts on first input rather than on page load.</li>
+      <li><strong>Volley:</strong> win screen shows ball positions after the winning move; view mode replays full round history.</li>
+      <li><strong>Mosaic:</strong> validation redesigned with clearer 3-state feedback.</li>
+    </ul>
+  </article>
+
+  <!-- ───────── 2026-04-07 ───────── -->
+  <article class="entry">
+    <p class="entry-date">April 7, 2026</p>
+    <h2>Mongi launches on HarmonyOS</h2>
+    <div class="platform-row">
+      <span class="platform-badge"><span class="icon">📦</span> HarmonyOS <span class="version">1.0.0 (1000001)</span></span>
+    </div>
+    <ul>
+      <li><strong>Day one.</strong> Mongi is live on Huawei AppGallery.</li>
+      <li><strong>12 games</strong> across English, Math, and Colors categories.</li>
+      <li><strong>10 themes</strong> — five clean, five immersive with animated ambient effects.</li>
+      <li><strong>Mongoose avatar builder</strong> — 14-layer SVG composition, 138 million possible combinations.</li>
+      <li><strong>Streaks + rest days</strong> for protecting your run when life happens.</li>
+      <li><strong>Friends, leaderboards, and weekly leagues</strong> for the competitive side.</li>
+    </ul>
+  </article>
+
+</main>
+
+<footer>
+  <div class="container">
+    &copy; 2026 <a href="https://www.jadecircuit.com" target="_blank" rel="noopener">Jade Circuit O&Uuml;</a> · Tallinn, Estonia
+  </div>
+</footer>
+
+</body>
+</html>
