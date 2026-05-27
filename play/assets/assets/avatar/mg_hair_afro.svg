@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <g fill="white">
+    <!-- Afro: curly bumpy outline, stays clear of ears (20,38) and (100,38) -->
+    <!-- Outer bumpy silhouette — curly texture all around -->
+    <path d="M32 36
+      Q28 30, 30 24 Q28 18, 34 14 Q32 8, 38 6 Q36 2, 44 2
+      Q46 -2, 52 2 Q56 -2, 60 2 Q64 -2, 68 2 Q70 -2, 76 2
+      Q84 2, 82 6 Q88 8, 86 14 Q92 18, 90 24 Q92 30, 88 36
+      Q84 30, 76 26 Q68 24, 60 24 Q52 24, 44 26 Q36 30, 32 36Z"/>
+  </g>
+</svg>

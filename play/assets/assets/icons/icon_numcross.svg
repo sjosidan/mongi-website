@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="white">
+  <!-- NumCross: crossword grid with some black cells -->
+  <rect x="4" y="4" width="9" height="9" rx="2"/>
+  <rect x="15" y="4" width="9" height="9" rx="2"/>
+  <rect x="26" y="4" width="9" height="9" rx="2" opacity=".15"/>
+  <rect x="37" y="4" width="9" height="9" rx="2"/>
+  <rect x="4" y="15" width="9" height="9" rx="2"/>
+  <rect x="15" y="15" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="26" y="15" width="9" height="9" rx="2"/>
+  <rect x="37" y="15" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="4" y="26" width="9" height="9" rx="2" opacity=".15"/>
+  <rect x="15" y="26" width="9" height="9" rx="2"/>
+  <rect x="26" y="26" width="9" height="9" rx="2"/>
+  <rect x="37" y="26" width="9" height="9" rx="2" opacity=".15"/>
+  <rect x="4" y="37" width="9" height="9" rx="2"/>
+  <rect x="15" y="37" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="26" y="37" width="9" height="9" rx="2"/>
+  <rect x="37" y="37" width="9" height="9" rx="2"/>
+</svg>

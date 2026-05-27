@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+<path d="M18,8.399999999999999 Q23.5,12.8 18,21.6 Q12.5,12.8 18,8.399999999999999 Z" fill="white" transform="rotate(30 18 15)"/>
+<path d="M60,4.6 Q64.5,8.2 60,15.4 Q55.5,8.2 60,4.6 Z" fill="white" transform="rotate(-20 60 10)"/>
+<path d="M100,12 Q105,16 100,24 Q95,16 100,12 Z" fill="white" transform="rotate(45 100 18)"/>
+<path d="M10,36.6 Q14.5,40.2 10,47.4 Q5.5,40.2 10,36.6 Z" fill="white" transform="rotate(-30 10 42)"/>
+<path d="M45,33.4 Q50.5,37.8 45,46.6 Q39.5,37.8 45,33.4 Z" fill="white" transform="rotate(15 45 40)"/>
+<path d="M80,32 Q85,36 80,44 Q75,36 80,32 Z" fill="white" transform="rotate(-45 80 38)"/>
+<path d="M112,39.6 Q116.5,43.2 112,50.4 Q107.5,43.2 112,39.6 Z" fill="white" transform="rotate(20 112 45)"/>
+<path d="M22,62 Q27,66 22,74 Q17,66 22,62 Z" fill="white" transform="rotate(-10 22 68)"/>
+<path d="M58,65.4 Q63.5,69.8 58,78.6 Q52.5,69.8 58,65.4 Z" fill="white" transform="rotate(35 58 72)"/>
+<path d="M92,59.6 Q96.5,63.2 92,70.4 Q87.5,63.2 92,59.6 Z" fill="white" transform="rotate(-25 92 65)"/>
+<path d="M15,88.4 Q20.5,92.8 15,101.6 Q9.5,92.8 15,88.4 Z" fill="white" transform="rotate(40 15 95)"/>
+<path d="M50,86 Q55,90 50,98 Q45,90 50,86 Z" fill="white" transform="rotate(-15 50 92)"/>
+<path d="M85,92.6 Q89.5,96.2 85,103.4 Q80.5,96.2 85,92.6 Z" fill="white" transform="rotate(25 85 98)"/>
+<path d="M112,89 Q117,93 112,101 Q107,93 112,89 Z" fill="white" transform="rotate(-35 112 95)"/>
+<path d="M30,109.6 Q34.5,113.2 30,120.4 Q25.5,113.2 30,109.6 Z" fill="white" transform="rotate(10 30 115)"/>
+<path d="M72,105.4 Q77.5,109.8 72,118.6 Q66.5,109.8 72,105.4 Z" fill="white" transform="rotate(-20 72 112)"/>
+</svg>

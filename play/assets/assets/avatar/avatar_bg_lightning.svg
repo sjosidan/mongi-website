@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+<path d="M15,8 L22.5,15.5 L17.5,15.5 L25,28 L17.5,20.5 L22.5,20.5 Z" fill="white" transform="rotate(-10 20 18)"/>
+<path d="M61,4 L67,10 L63,10 L69,20 L63,14 L67,14 Z" fill="white" transform="rotate(15 65 12)"/>
+<path d="M100.6,11.2 L107.2,17.8 L102.8,17.8 L109.4,28.8 L102.8,22.2 L107.2,22.2 Z" fill="white" transform="rotate(-5 105 20)"/>
+<path d="M8,40 L14,46 L10,46 L16,56 L10,50 L14,50 Z" fill="white" transform="rotate(20 12 48)"/>
+<path d="M45,35 L52.5,42.5 L47.5,42.5 L55,55 L47.5,47.5 L52.5,47.5 Z" fill="white" transform="rotate(-15 50 45)"/>
+<path d="M85.6,33.2 L92.2,39.8 L87.8,39.8 L94.4,50.8 L87.8,44.2 L92.2,44.2 Z" fill="white" transform="rotate(10 90 42)"/>
+<path d="M20,65 L27.5,72.5 L22.5,72.5 L30,85 L22.5,77.5 L27.5,77.5 Z" fill="white" transform="rotate(5 25 75)"/>
+<path d="M66,64 L72,70 L68,70 L74,80 L68,74 L72,74 Z" fill="white" transform="rotate(-20 70 72)"/>
+<path d="M105.6,61.2 L112.2,67.8 L107.8,67.8 L114.4,78.8 L107.8,72.2 L112.2,72.2 Z" fill="white" transform="rotate(15 110 70)"/>
+<path d="M11,92 L17,98 L13,98 L19,108 L13,102 L17,102 Z" fill="white" transform="rotate(-10 15 100)"/>
+<path d="M50,88 L57.5,95.5 L52.5,95.5 L60,108 L52.5,100.5 L57.5,100.5 Z" fill="white" transform="rotate(10 55 98)"/>
+<path d="M90.6,93.2 L97.2,99.8 L92.8,99.8 L99.4,110.8 L92.8,104.2 L97.2,104.2 Z" fill="white" transform="rotate(-5 95 102)"/>
+</svg>

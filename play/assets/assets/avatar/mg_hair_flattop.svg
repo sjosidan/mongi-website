@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <g fill="white">
+    <!-- Flattop: squared-off flat top, tapered sides meeting the head -->
+    <path d="M28 38 L28 10 L92 10 L92 38 Q78 28, 60 24 Q42 28, 28 38Z"/>
+  </g>
+</svg>

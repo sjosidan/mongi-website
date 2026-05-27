@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Horizontal wave bands: cubic bezier curves forming filled wavy stripes -->
+  <path d="M0,20 C20,10 40,30 60,20 C80,10 100,30 120,20 L120,26 C100,36 80,16 60,26 C40,36 20,16 0,26 Z" fill="white"/>
+  <path d="M0,50 C20,40 40,60 60,50 C80,40 100,60 120,50 L120,56 C100,66 80,46 60,56 C40,66 20,46 0,56 Z" fill="white"/>
+  <path d="M0,80 C20,70 40,90 60,80 C80,70 100,90 120,80 L120,86 C100,96 80,76 60,86 C40,96 20,76 0,86 Z" fill="white"/>
+  <path d="M0,110 C20,100 40,120 60,110 C80,100 100,120 120,110 L120,116 C100,126 80,106 60,116 C40,126 20,106 0,116 Z" fill="white"/>
+</svg>

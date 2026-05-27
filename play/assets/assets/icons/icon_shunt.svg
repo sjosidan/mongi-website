@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="white">
+  <!-- Grid of tiles -->
+  <rect x="8" y="8" width="10" height="10" rx="2" fill="white" opacity=".9"/>
+  <rect x="19" y="8" width="10" height="10" rx="2" fill="white" opacity=".6"/>
+  <rect x="30" y="8" width="10" height="10" rx="2" fill="white" opacity=".3"/>
+  <rect x="8" y="19" width="10" height="10" rx="2" fill="white" opacity=".5"/>
+  <rect x="19" y="19" width="10" height="10" rx="2" fill="white" opacity=".8"/>
+  <rect x="30" y="19" width="10" height="10" rx="2" fill="white" opacity=".4"/>
+  <rect x="8" y="30" width="10" height="10" rx="2" fill="white" opacity=".2"/>
+  <rect x="19" y="30" width="10" height="10" rx="2" fill="white" opacity=".7"/>
+  <rect x="30" y="30" width="10" height="10" rx="2" fill="white" opacity=".5"/>
+  <!-- Slide arrow -->
+  <path d="M44 13 L48 13 M46 10 L48 13 L46 16" stroke="white" stroke-width="1.5" fill="none" opacity=".7"/>
+</svg>

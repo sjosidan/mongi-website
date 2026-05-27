@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <!-- Grid outline -->
+  <rect x="2" y="2" width="20" height="20" rx="1.5" stroke="white" stroke-width="1.5"/>
+  <!-- Horizontal grid lines -->
+  <line x1="2" y1="6" x2="22" y2="6" stroke="white" stroke-width="0.8" opacity="0.4"/>
+  <line x1="2" y1="10" x2="22" y2="10" stroke="white" stroke-width="0.8" opacity="0.4"/>
+  <line x1="2" y1="14" x2="22" y2="14" stroke="white" stroke-width="0.8" opacity="0.4"/>
+  <line x1="2" y1="18" x2="22" y2="18" stroke="white" stroke-width="0.8" opacity="0.4"/>
+  <!-- Vertical grid lines -->
+  <line x1="6" y1="2" x2="6" y2="22" stroke="white" stroke-width="0.8" opacity="0.4"/>
+  <line x1="10" y1="2" x2="10" y2="22" stroke="white" stroke-width="0.8" opacity="0.4"/>
+  <line x1="14" y1="2" x2="14" y2="22" stroke="white" stroke-width="0.8" opacity="0.4"/>
+  <line x1="18" y1="2" x2="18" y2="22" stroke="white" stroke-width="0.8" opacity="0.4"/>
+  <!-- Rectangle 1: 2x3 top-left -->
+  <rect x="2" y="2" width="8" height="12" rx="0.5" stroke="white" stroke-width="2" fill="white" fill-opacity="0.15"/>
+  <!-- Rectangle 2: 3x2 top-right -->
+  <rect x="10" y="2" width="12" height="8" rx="0.5" stroke="white" stroke-width="2" fill="white" fill-opacity="0.25"/>
+  <!-- Rectangle 3: 2x2 bottom-left -->
+  <rect x="2" y="14" width="8" height="8" rx="0.5" stroke="white" stroke-width="2" fill="white" fill-opacity="0.2"/>
+  <!-- Rectangle 4: 3x2 bottom-right -->
+  <rect x="10" y="10" width="12" height="12" rx="0.5" stroke="white" stroke-width="2" fill="white" fill-opacity="0.1"/>
+  <!-- Number labels -->
+  <text x="6" y="9" text-anchor="middle" fill="white" font-size="5" font-weight="bold">6</text>
+  <text x="16" y="7" text-anchor="middle" fill="white" font-size="5" font-weight="bold">6</text>
+  <text x="6" y="19" text-anchor="middle" fill="white" font-size="5" font-weight="bold">4</text>
+  <text x="16" y="17" text-anchor="middle" fill="white" font-size="5" font-weight="bold">6</text>
+</svg>

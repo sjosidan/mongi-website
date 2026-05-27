@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+<rect x="9" y="8.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(35 15 10)"/>
+<rect x="44" y="6.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-25 50 8)"/>
+<rect x="76" y="13.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(60 82 15)"/>
+<rect x="104" y="10.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-40 110 12)"/>
+<rect x="2" y="33.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(20 8 35)"/>
+<rect x="32" y="38.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-50 38 40)"/>
+<rect x="62" y="30.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(40 68 32)"/>
+<rect x="94" y="36.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-15 100 38)"/>
+<rect x="14" y="56.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(55 20 58)"/>
+<rect x="46" y="60.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-30 52 62)"/>
+<rect x="79" y="53.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(10 85 55)"/>
+<rect x="109" y="58.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-45 115 60)"/>
+<rect x="6" y="80.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(30 12 82)"/>
+<rect x="36" y="86.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-20 42 88)"/>
+<rect x="66" y="78.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(45 72 80)"/>
+<rect x="99" y="83.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-35 105 85)"/>
+<rect x="19" y="106.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(15 25 108)"/>
+<rect x="49" y="110.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-55 55 112)"/>
+<rect x="82" y="103.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(25 88 105)"/>
+<rect x="106" y="108.5" width="12" height="3" rx="1.5" fill="white" transform="rotate(-10 112 110)"/>
+</svg>

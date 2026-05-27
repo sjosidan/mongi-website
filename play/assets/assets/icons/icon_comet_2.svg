@@ -1,0 +1,8 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tier 2: Comet — dual-stroke tail sweeping right, bright core -->
+  <path d="M2 16 Q6 14 10 12.5 Q13 11.5 15 11" stroke="#93C5FD" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.3"/>
+  <path d="M4 15 Q7 13.5 11 12 Q14 11 15.5 10.5" stroke="#3B82F6" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="17" cy="10.5" r="4" fill="#3B82F6"/>
+  <circle cx="17" cy="10.5" r="2.5" fill="#93C5FD"/>
+  <circle cx="17" cy="10.5" r="1.2" fill="#FFFFFF"/>
+</svg>

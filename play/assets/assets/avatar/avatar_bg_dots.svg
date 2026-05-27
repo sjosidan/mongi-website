@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Polka dots: offset grid of circles -->
+  <circle cx="15" cy="15" r="6" fill="white"/>
+  <circle cx="45" cy="15" r="6" fill="white"/>
+  <circle cx="75" cy="15" r="6" fill="white"/>
+  <circle cx="105" cy="15" r="6" fill="white"/>
+  <circle cx="0" cy="40" r="6" fill="white"/>
+  <circle cx="30" cy="40" r="6" fill="white"/>
+  <circle cx="60" cy="40" r="6" fill="white"/>
+  <circle cx="90" cy="40" r="6" fill="white"/>
+  <circle cx="120" cy="40" r="6" fill="white"/>
+  <circle cx="15" cy="65" r="6" fill="white"/>
+  <circle cx="45" cy="65" r="6" fill="white"/>
+  <circle cx="75" cy="65" r="6" fill="white"/>
+  <circle cx="105" cy="65" r="6" fill="white"/>
+  <circle cx="0" cy="90" r="6" fill="white"/>
+  <circle cx="30" cy="90" r="6" fill="white"/>
+  <circle cx="60" cy="90" r="6" fill="white"/>
+  <circle cx="90" cy="90" r="6" fill="white"/>
+  <circle cx="120" cy="90" r="6" fill="white"/>
+  <circle cx="15" cy="115" r="6" fill="white"/>
+  <circle cx="45" cy="115" r="6" fill="white"/>
+  <circle cx="75" cy="115" r="6" fill="white"/>
+  <circle cx="105" cy="115" r="6" fill="white"/>
+</svg>

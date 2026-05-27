@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="white">
+  <!-- Map with colored regions -->
+  <rect x="8" y="8" width="32" height="32" rx="2" fill="none" stroke="white" stroke-width="1.5"/>
+  <!-- Region dividers -->
+  <path d="M8 20 L25 20 L25 8" fill="none" stroke="white" stroke-width="1"/>
+  <path d="M25 20 L40 20" fill="none" stroke="white" stroke-width="1"/>
+  <path d="M18 20 L18 40" fill="none" stroke="white" stroke-width="1"/>
+  <path d="M25 20 L25 32 L40 32" fill="none" stroke="white" stroke-width="1"/>
+  <!-- Color dots in regions -->
+  <circle cx="16" cy="14" r="2" fill="white" opacity=".8"/>
+  <circle cx="33" cy="14" r="2" fill="white" opacity=".5"/>
+  <circle cx="13" cy="30" r="2" fill="white" opacity=".6"/>
+  <circle cx="32" cy="26" r="2" fill="white" opacity=".9"/>
+</svg>

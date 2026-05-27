@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="white">
+  <!-- Nerdle: equation row with = sign -->
+  <!-- Top row: number tiles -->
+  <rect x="3" y="8" width="9" height="9" rx="2"/>
+  <rect x="14" y="8" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="25" y="8" width="9" height="9" rx="2"/>
+  <rect x="36" y="8" width="9" height="9" rx="2" opacity=".3"/>
+  <!-- Bottom row: operator/digit tiles -->
+  <rect x="3" y="19" width="9" height="9" rx="2" opacity=".3"/>
+  <rect x="14" y="19" width="9" height="9" rx="2"/>
+  <rect x="25" y="19" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="36" y="19" width="9" height="9" rx="2"/>
+  <!-- Equals sign -->
+  <rect x="14" y="33" width="20" height="3" rx="1"/>
+  <rect x="14" y="39" width="20" height="3" rx="1"/>
+</svg>

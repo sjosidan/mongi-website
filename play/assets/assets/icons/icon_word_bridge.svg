@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
+  <!-- Start word (left block) -->
+  <rect x="1" y="9" width="6" height="6" rx="1.5"/>
+  <!-- End word (right block) -->
+  <rect x="17" y="9" width="6" height="6" rx="1.5"/>
+  <!-- Bridge path with stepping stones -->
+  <circle cx="9.5" cy="12" r="2" fill="none" stroke="white" stroke-width="1.5"/>
+  <circle cx="14.5" cy="12" r="2" fill="none" stroke="white" stroke-width="1.5"/>
+  <!-- Connection arrows -->
+  <line x1="7" y1="12" x2="7.5" y2="12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="11.5" y1="12" x2="12.5" y2="12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="16.5" y1="12" x2="17" y2="12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Arrow heads suggesting direction -->
+  <polyline points="15,10 17,12 15,14" fill="none" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/>
+</svg>

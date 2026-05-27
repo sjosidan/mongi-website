@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Kiss: small puckered lips -->
+  <ellipse cx="60" cy="68" rx="4" ry="3" fill="#E87070" stroke="#2C1B0E" stroke-width="1.5"/>
+  <line x1="56" y1="68" x2="64" y2="68" stroke="#2C1B0E" stroke-width="1" stroke-linecap="round"/>
+</svg>

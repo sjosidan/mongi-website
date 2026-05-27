@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <circle cx="8" cy="8" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="18" cy="8" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="28" cy="8" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="38" cy="8" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="8" cy="18" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="18" cy="18" r="2.5" fill="white"/>
+  <circle cx="28" cy="18" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="38" cy="18" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="8" cy="28" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="18" cy="28" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="28" cy="28" r="2.5" fill="white"/>
+  <circle cx="38" cy="28" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="8" cy="38" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="18" cy="38" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="28" cy="38" r="2.5" fill="white" opacity=".4"/>
+  <circle cx="38" cy="38" r="2.5" fill="white"/>
+  <line x1="16" y1="16" x2="40" y2="40" stroke="white" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+</svg>

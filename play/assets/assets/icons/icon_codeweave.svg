@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="white" stroke-width="3" stroke-linecap="round">
+  <!-- Thread 1: top-left to bottom-right, weaving -->
+  <path d="M 6,12 C 16,12 14,24 24,24 C 34,24 32,36 42,36"/>
+  <!-- Thread 2: bottom-left to top-right, crossing over -->
+  <path d="M 6,36 C 16,36 14,24 24,24 C 34,24 32,12 42,12" opacity=".65"/>
+  <!-- Thread 3: horizontal middle thread -->
+  <path d="M 4,24 C 12,18 20,30 28,18 C 32,14 40,24 44,24" opacity=".35"/>
+  <!-- Small knot dots at intersections -->
+  <circle cx="24" cy="24" r="2.5" fill="white" stroke="none"/>
+</svg>

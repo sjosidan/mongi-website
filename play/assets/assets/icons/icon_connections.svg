@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="white">
+  <!-- Solved group (merged bar) - represents a revealed category -->
+  <rect x="3" y="4" width="42" height="9" rx="2.5"/>
+  <!-- Remaining word tiles (3 rows x 4 cols) -->
+  <!-- Row 2 -->
+  <rect x="3" y="15" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="14" y="15" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="25" y="15" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="36" y="15" width="9" height="9" rx="2" opacity=".55"/>
+  <!-- Row 3 - two tiles "selected" (full opacity) -->
+  <rect x="3" y="26" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="14" y="26" width="9" height="9" rx="2"/>
+  <rect x="25" y="26" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="36" y="26" width="9" height="9" rx="2"/>
+  <!-- Row 4 - two tiles "selected" (full opacity) -->
+  <rect x="3" y="37" width="9" height="9" rx="2"/>
+  <rect x="14" y="37" width="9" height="9" rx="2" opacity=".55"/>
+  <rect x="25" y="37" width="9" height="9" rx="2"/>
+  <rect x="36" y="37" width="9" height="9" rx="2" opacity=".55"/>
+</svg>

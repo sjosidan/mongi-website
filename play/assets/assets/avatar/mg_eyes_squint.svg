@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Squint eyes: narrowed suspicious/mischievous slits -->
+  <!-- Left eye -->
+  <path d="M30 44 Q35 40, 40 40 Q45 40, 50 44 Q45 47, 40 47 Q35 47, 30 44Z" fill="#FFFFFF" stroke="#2C1B0E" stroke-width="2"/>
+  <circle cx="40" cy="44" r="2.5" fill="#2C1B0E"/>
+  <!-- Right eye -->
+  <path d="M70 44 Q75 40, 80 40 Q85 40, 90 44 Q85 47, 80 47 Q75 47, 70 44Z" fill="#FFFFFF" stroke="#2C1B0E" stroke-width="2"/>
+  <circle cx="80" cy="44" r="2.5" fill="#2C1B0E"/>
+</svg>

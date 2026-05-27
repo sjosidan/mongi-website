@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+<polygon points="20,5 28,18 12,18" fill="white"/>
+<polygon points="65,10 73,23 57,23" fill="white" transform="rotate(30 65 16)"/>
+<polygon points="100,8 108,21 92,21" fill="white" transform="rotate(-20 100 14)"/>
+<polygon points="10,38 18,51 2,51" fill="white" transform="rotate(15 10 44)"/>
+<polygon points="45,42 53,55 37,55" fill="white" transform="rotate(-40 45 48)"/>
+<polygon points="85,35 93,48 77,48" fill="white" transform="rotate(50 85 41)"/>
+<polygon points="110,45 118,58 102,58" fill="white" transform="rotate(-10 110 51)"/>
+<polygon points="25,68 33,81 17,81" fill="white" transform="rotate(25 25 74)"/>
+<polygon points="60,72 68,85 52,85" fill="white" transform="rotate(-35 60 78)"/>
+<polygon points="95,65 103,78 87,78" fill="white" transform="rotate(45 95 71)"/>
+<polygon points="15,95 23,108 7,108" fill="white" transform="rotate(-15 15 101)"/>
+<polygon points="50,100 58,113 42,113" fill="white" transform="rotate(20 50 106)"/>
+<polygon points="80,95 88,108 72,108" fill="white" transform="rotate(-25 80 101)"/>
+<polygon points="110,100 118,113 102,113" fill="white" transform="rotate(35 110 106)"/>
+</svg>

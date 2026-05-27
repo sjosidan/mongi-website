@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Diagonal stripes: rotated filled rectangles -->
+  <g transform="rotate(-45 60 60)">
+    <rect x="-60" y="-30" width="240" height="12" fill="white"/>
+    <rect x="-60" y="0" width="240" height="12" fill="white"/>
+    <rect x="-60" y="30" width="240" height="12" fill="white"/>
+    <rect x="-60" y="60" width="240" height="12" fill="white"/>
+    <rect x="-60" y="90" width="240" height="12" fill="white"/>
+    <rect x="-60" y="120" width="240" height="12" fill="white"/>
+    <rect x="-60" y="150" width="240" height="12" fill="white"/>
+  </g>
+</svg>

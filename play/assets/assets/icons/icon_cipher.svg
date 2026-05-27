@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="white">
+  <!-- Letter cells -->
+  <rect x="4" y="14" width="10" height="14" rx="1" fill="none" stroke="white" stroke-width="1"/>
+  <rect x="16" y="14" width="10" height="14" rx="1" fill="none" stroke="white" stroke-width="1"/>
+  <rect x="28" y="14" width="10" height="14" rx="1" fill="none" stroke="white" stroke-width="1"/>
+  <!-- Cipher letters on top -->
+  <text x="9" y="20" font-size="6" fill="white" text-anchor="middle" font-family="sans-serif" opacity=".5">X</text>
+  <text x="21" y="20" font-size="6" fill="white" text-anchor="middle" font-family="sans-serif" opacity=".5">Q</text>
+  <text x="33" y="20" font-size="6" fill="white" text-anchor="middle" font-family="sans-serif" opacity=".5">Z</text>
+  <!-- Decoded letters below -->
+  <text x="9" y="26" font-size="7" fill="white" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+  <text x="21" y="26" font-size="7" fill="white" text-anchor="middle" font-family="sans-serif" font-weight="bold">H</text>
+  <text x="33" y="26" font-size="7" fill="white" text-anchor="middle" font-family="sans-serif" font-weight="bold">E</text>
+  <!-- Arrow -->
+  <line x1="9" y1="33" x2="9" y2="37" stroke="white" stroke-width="1" opacity=".4"/>
+  <text x="9" y="44" font-size="5" fill="white" text-anchor="middle" font-family="sans-serif" opacity=".4">A→T</text>
+  <!-- Lock icon hint -->
+  <rect x="36" y="6" width="8" height="6" rx="1" fill="none" stroke="white" stroke-width="1" opacity=".5"/>
+  <path d="M38 6V4a2 2 0 0 1 4 0v2" fill="none" stroke="white" stroke-width="1" opacity=".5"/>
+</svg>

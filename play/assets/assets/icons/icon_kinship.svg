@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="white">
+  <!-- Five word cards in a circle -->
+  <rect x="16" y="2" width="16" height="8" rx="2" fill="none" stroke="white" stroke-width="1.2"/>
+  <rect x="32" y="12" width="14" height="8" rx="2" fill="none" stroke="white" stroke-width="1.2"/>
+  <rect x="28" y="28" width="16" height="8" rx="2" fill="none" stroke="white" stroke-width="1.2"/>
+  <rect x="4" y="28" width="16" height="8" rx="2" fill="none" stroke="white" stroke-width="1.2"/>
+  <rect x="2" y="12" width="14" height="8" rx="2" fill="none" stroke="white" stroke-width="1.2"/>
+  <!-- Center question mark -->
+  <circle cx="24" cy="22" r="6" fill="none" stroke="white" stroke-width="1.5"/>
+  <text x="24" y="25" font-size="9" fill="white" text-anchor="middle" font-family="sans-serif" font-weight="bold">?</text>
+  <!-- Connecting lines -->
+  <line x1="24" y1="10" x2="24" y2="16" stroke="white" stroke-width="0.8" opacity=".4"/>
+  <line x1="32" y1="16" x2="30" y2="18" stroke="white" stroke-width="0.8" opacity=".4"/>
+  <line x1="30" y1="28" x2="28" y2="26" stroke="white" stroke-width="0.8" opacity=".4"/>
+  <line x1="16" y1="16" x2="18" y2="18" stroke="white" stroke-width="0.8" opacity=".4"/>
+  <!-- Small word text -->
+  <text x="24" y="44" font-size="5" fill="white" text-anchor="middle" font-family="sans-serif" opacity=".5">LINK</text>
+</svg>

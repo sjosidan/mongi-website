@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Starry eyes: big round eyes with star-shaped pupils -->
+  <!-- Left eye -->
+  <ellipse cx="40" cy="44" rx="10" ry="11" fill="#FFFFFF" stroke="#2C1B0E" stroke-width="2"/>
+  <path d="M40 37 L41.5 42 L46.5 42 L42.5 44.5 L44 49.5 L40 46.5 L36 49.5 L37.5 44.5 L33.5 42 L38.5 42 Z" fill="#FFB300"/>
+  <!-- Right eye -->
+  <ellipse cx="80" cy="44" rx="10" ry="11" fill="#FFFFFF" stroke="#2C1B0E" stroke-width="2"/>
+  <path d="M80 37 L81.5 42 L86.5 42 L82.5 44.5 L84 49.5 L80 46.5 L76 49.5 L77.5 44.5 L73.5 42 L78.5 42 Z" fill="#FFB300"/>
+</svg>

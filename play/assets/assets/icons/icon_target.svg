@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="white">
+  <!-- Target: bullseye target with number tiles -->
+  <!-- Concentric circles -->
+  <circle cx="24" cy="20" r="16" fill="none" stroke="white" stroke-width="2" opacity=".3"/>
+  <circle cx="24" cy="20" r="10" fill="none" stroke="white" stroke-width="2" opacity=".55"/>
+  <circle cx="24" cy="20" r="4" opacity=".8"/>
+  <!-- Number tiles below -->
+  <rect x="3" y="38" width="8" height="7" rx="1.5" opacity=".55"/>
+  <rect x="13" y="38" width="8" height="7" rx="1.5"/>
+  <rect x="23" y="38" width="8" height="7" rx="1.5" opacity=".55"/>
+  <rect x="33" y="38" width="8" height="7" rx="1.5"/>
+</svg>
