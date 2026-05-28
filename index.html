@@ -875,10 +875,10 @@
     </p>
 
     <div class="policy">
-      <p class="updated">Last updated: 12 May 2026 &middot; Data controller: Jade Circuit O&Uuml;, Estonia (EU)</p>
+      <p class="updated">Last updated: 28 May 2026 &middot; Data controller: Jade Circuit O&Uuml;, Estonia (EU)</p>
 
       <h3>1. What we collect</h3>
-      <p>When you use Mongi without an account, no personal data is sent to our servers — everything is stored on your device. When you sign in, we may collect:</p>
+      <p>When you use Mongi without an account (including the play-in-browser demo at <a href="/play/">mongi.app/play</a>), no personal data tied to your identity is sent to our servers — your game data stays on your device. We do collect <strong>anonymous, aggregate usage analytics</strong> (see below). When you sign in, we may additionally collect:</p>
       <ul>
         <li><strong>Account information:</strong> your name, email address, and profile photo from your sign-in provider (Apple, Google, or Facebook).</li>
         <li><strong>Game data:</strong> scores, streaks, statistics, achievements, and game progress.</li>
@@ -886,6 +886,7 @@
         <li><strong>Avatar configuration:</strong> your custom mongoose avatar settings.</li>
         <li><strong>Push-notification tokens:</strong> if you enable streak reminders.</li>
         <li><strong>Crash reports:</strong> anonymous diagnostic data for bug fixing — no personal data included.</li>
+        <li><strong>Anonymous usage analytics:</strong> aggregate activity such as games started/completed, which category is played, and app opens. Collected via Firebase Analytics with no personal identifiers and no cross-site tracking — used only to understand overall activity and improve the games.</li>
       </ul>
 
       <h3>2. How we use it</h3>
@@ -909,6 +910,7 @@
       <h3>4. Third-party services</h3>
       <ul>
         <li><strong>Google Firebase</strong> (Firestore, Authentication, Cloud Functions) — data storage, accounts, server-side logic</li>
+        <li><strong>Firebase Analytics</strong> — anonymous, aggregate usage metrics (no personal identifiers)</li>
         <li><strong>Sign in with Apple</strong> — optional sign-in method (iOS)</li>
         <li><strong>Google Sign-In</strong> — optional sign-in method</li>
         <li><strong>Facebook Login</strong> — optional sign-in method</li>
