@@ -171,15 +171,21 @@
 
 <main class="container">
 
-  <!-- ───────── 2026-05-29 (HMOS catch-up) ───────── -->
+  <!-- ───────── 2026-06-01 (1.0.3 cross-platform) ───────── -->
   <article class="entry">
-    <p class="entry-date">May 29, 2026</p>
-    <h2>Daily streak reminders on HarmonyOS</h2>
+    <p class="entry-date">June 1, 2026</p>
+    <h2>Send feedback from inside the app + a few bug fixes</h2>
     <div class="platform-row">
+      <span class="platform-badge"><span class="icon">🍎</span> iOS <span class="version">1.0.3 (33)</span></span>
+      <span class="platform-badge"><span class="icon">🤖</span> Android <span class="version">1.0.3 (33)</span></span>
       <span class="platform-badge"><span class="icon">📦</span> HarmonyOS <span class="version">1.0.3 (1000006)</span></span>
     </div>
     <ul>
-      <li><strong>Daily streak reminders</strong> — get a gentle nudge every evening at 8 PM to come play and keep your streak alive. Enable / disable in Settings → Streak Reminders. Brings HarmonyOS to parity with the iOS / Android release earlier today.</li>
+      <li><strong>Send feedback</strong> — new entry in Settings. Pick a category (Bug / Idea / Other), write a short note, attach up to three screenshots, hit send. Goes straight to the development backlog. Email is optional and only used if we need to follow up.</li>
+      <li><strong>Streak reminders now use your local time</strong> — some players outside UTC were getting pinged at 4 AM. Now 8 PM means 8 PM where you actually are. Six different message variants so the same line doesn't repeat every day.</li>
+      <li><strong>Codeweave bug fix</strong> — threads could be drawn over another puzzle's input/output box, leaving the puzzle unsolvable. Fixed across all platforms.</li>
+      <li><strong>Word Snake start marker</strong> — the starting cell for the next word now glows gold so it's clear where to begin dragging (iOS / Android — HarmonyOS already worked).</li>
+      <li><strong>Avatar Builder polish</strong> — Randomize and Save are now icons, so the labels never wrap awkwardly on smaller screens or longer locales (iOS / Android).</li>
     </ul>
   </article>
 
