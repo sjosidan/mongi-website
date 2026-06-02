@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Mongi — Admin Dashboard</title>
+
+  <link rel="icon" type="image/png" href="../assets/mongi-icon.png" />
+  <link rel="apple-touch-icon" href="../assets/mongi-icon.png" />
+
+  <style>
+    :root {
+      --mint-1: #14B8A6;
+      --mint-2: #2DD4BF;
+      --rose: #FF6B9D;
+      --ink: #0F172A;
+      --ink-2: #1F2937;
+      --muted: #475569;
+      --soft: #94A3B8;
+      --bg: #FFFFFF;
+      --surface: #F8FAFC;
+      --border: #E2E8F0;
+      --accent: var(--mint-1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, "SF Pro Display", "Segoe UI", Inter, Roboto, system-ui, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    .nav { padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .nav .row { display: flex; align-items: center; gap: 12px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .nav img { width: 28px; height: 28px; border-radius: 6px; }
+    .nav .brand { font-weight: 700; font-size: 17px; color: var(--ink); }
+    .nav .right { margin-left: auto; display: flex; gap: 16px; align-items: center; font-size: 14px; color: var(--muted); }
+    .nav button {
+      background: transparent; border: 1px solid var(--border); border-radius: 6px;
+      padding: 6px 10px; font: inherit; color: var(--muted); cursor: pointer;
+    }
+    .nav button:hover { color: var(--ink); border-color: var(--soft); }
+
+    /* Header */
+    .header { padding: 40px 0 24px; }
+    .header h1 { font-size: 32px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px; }
+    .header p { font-size: 15px; color: var(--muted); margin: 0; }
+    .header .stamp { font-size: 13px; color: var(--soft); margin-top: 6px; font-variant-numeric: tabular-nums; }
+
+    /* Summary tiles */
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 24px 0 40px; }
+    .tile {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 18px;
+    }
+    .tile .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .tile .value { font-size: 28px; font-weight: 700; color: var(--ink); margin-top: 6px; font-variant-numeric: tabular-nums; }
+    .tile .sub { font-size: 12px; color: var(--soft); margin-top: 4px; }
+
+    /* Chart grid */
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+    .card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px;
+    }
+    .card.wide { grid-column: 1 / -1; }
+    .card h2 { font-size: 16px; font-weight: 700; margin: 0 0 4px 0; color: var(--ink); }
+    .card p.sub { font-size: 13px; color: var(--muted); margin: 0 0 16px 0; }
+    .card canvas { max-height: 260px; }
+    .card.wide canvas { max-height: 220px; }
+
+    @media (max-width: 700px) {
+      .charts { grid-template-columns: 1fr; }
+    }
+
+    /* Token gate */
+    .gate {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.6);
+      display: flex; align-items: center; justify-content: center; z-index: 1000;
+    }
+    .gate .panel {
+      background: var(--bg); border-radius: 12px; padding: 32px;
+      max-width: 380px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .gate h2 { margin: 0 0 8px 0; font-size: 20px; }
+    .gate p { margin: 0 0 20px 0; color: var(--muted); font-size: 14px; }
+    .gate input {
+      width: 100%; padding: 10px 12px; font: inherit; border: 1px solid var(--border);
+      border-radius: 8px; margin-bottom: 12px;
+    }
+    .gate button {
+      width: 100%; padding: 10px 12px; font: inherit; border: 0;
+      border-radius: 8px; background: var(--accent); color: white; font-weight: 600; cursor: pointer;
+    }
+    .gate button:hover { background: var(--mint-2); }
+    .gate .error { color: var(--rose); font-size: 13px; margin: 8px 0 0 0; display: none; }
+
+    /* States */
+    .loading, .empty {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 200px; color: var(--muted); font-size: 14px;
+    }
+    .pill {
+      display: inline-block; padding: 2px 8px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 12px;
+      font-size: 11px; color: var(--muted); font-weight: 500; margin-left: 8px;
+    }
+
+    /* Footer */
+    footer { margin-top: 64px; padding: 24px 0; border-top: 1px solid var(--border); font-size: 13px; color: var(--soft); text-align: center; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="row">
+    <img src="../assets/mongi-icon.png" alt="" />
+    <span class="brand"><a href="../" style="color: var(--ink);">Mongi</a></span>
+    <span class="pill">Admin</span>
+    <div class="right">
+      <button id="refreshBtn" title="Refresh data">↻ Refresh</button>
+      <button id="logoutBtn" title="Clear token">Log out</button>
+    </div>
+  </div>
+</nav>
+
+<section class="header">
+  <div class="container">
+    <h1>Dashboard</h1>
+    <p>Live game analytics across iOS, Android, and HarmonyOS — drawn from BigQuery.</p>
+    <p class="stamp" id="stamp">—</p>
+  </div>
+</section>
+
+<main class="container">
+
+  <div id="tiles" class="tiles">
+    <div class="loading">Loading…</div>
+  </div>
+
+  <div class="charts">
+    <div class="card wide">
+      <h2>Daily plays (last 60 days)</h2>
+      <p class="sub">Total games completed per day, plus unique players.</p>
+      <canvas id="chartDaily"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Plays per game</h2>
+      <p class="sub">All-time game popularity, top 30.</p>
+      <canvas id="chartPlays"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Platform split</h2>
+      <p class="sub">HMOS vs iOS / Android.</p>
+      <canvas id="chartPlatform"></canvas>
+    </div>
+
+    <div class="card wide">
+      <h2>Win rate &amp; average score by game</h2>
+      <p class="sub">Win rate as %, average score on the secondary axis.</p>
+      <canvas id="chartWinRate"></canvas>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container">
+    Internal admin page · data refreshed on load · noindex
+  </div>
+</footer>
+
+<!-- Token gate (hidden until first load determines) -->
+<div id="gate" class="gate" style="display:none">
+  <div class="panel">
+    <h2>Mongi admin</h2>
+    <p>Paste the dashboard token. It'll be saved in this browser only.</p>
+    <input id="tokenInput" type="password" placeholder="Dashboard token" autocomplete="off" />
+    <button id="tokenSubmit">Unlock</button>
+    <p class="error" id="tokenError">Token rejected.</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="dashboard.js"></script>
+
+</body>
+</html>
