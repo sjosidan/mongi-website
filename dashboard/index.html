@@ -112,6 +112,12 @@
       border: 1px solid var(--border); border-radius: 12px;
       font-size: 11px; color: var(--muted); font-weight: 500; margin-left: 8px;
     }
+    .badge-ga4 {
+      display: inline-block; vertical-align: middle; margin-left: 6px;
+      padding: 2px 7px; background: #FEF3C7; color: #92400E;
+      border-radius: 10px; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.3px; text-transform: uppercase;
+    }
 
     /* Footer */
     footer { margin-top: 64px; padding: 24px 0; border-top: 1px solid var(--border); font-size: 13px; color: var(--soft); text-align: center; }
@@ -168,6 +174,24 @@
       <h2>Average score as % of max per game</h2>
       <p class="sub">Line = how well players score relative to the game's max. Bars = total plays. Normalises across games with different score ceilings.</p>
       <canvas id="chartScoreEff"></canvas>
+    </div>
+
+    <div class="card wide">
+      <h2>Started vs completed funnel <span class="badge-ga4">iOS + Android only</span></h2>
+      <p class="sub">From GA4 events — counts game_started against game_completed per game. Line shows completion %. HMOS plays don't fire GA4 events so they're not in this chart; for cross-platform completion use Plays per Game.</p>
+      <canvas id="chartFunnel"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>New players per day</h2>
+      <p class="sub">First-time profile creations, last 60 days. All platforms including HMOS.</p>
+      <canvas id="chartNewPlayers"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Geographic spread <span class="badge-ga4">iOS + Android only</span></h2>
+      <p class="sub">From GA4 — top 15 countries by anonymous player count (last 60 days).</p>
+      <canvas id="chartGeo"></canvas>
     </div>
   </div>
 

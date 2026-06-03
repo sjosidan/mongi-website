@@ -274,6 +274,109 @@ function renderScoreEfficiency(rows) {
   });
 }
 
+function renderFunnel(rows) {
+  destroyChart('funnel');
+  const sorted = [...rows].sort((a, b) => b.started - a.started);
+  charts.funnel = new Chart($('#chartFunnel').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(r => r.game),
+      datasets: [
+        {
+          label: 'Started',
+          data: sorted.map(r => r.started),
+          backgroundColor: COLORS.muted,
+          borderRadius: 4,
+          yAxisID: 'y1',
+          order: 3,
+        },
+        {
+          label: 'Completed',
+          data: sorted.map(r => r.completed),
+          backgroundColor: COLORS.mint,
+          borderRadius: 4,
+          yAxisID: 'y1',
+          order: 2,
+        },
+        {
+          label: 'Completion %',
+          data: sorted.map(r => r.completion_pct),
+          type: 'line',
+          borderColor: COLORS.rose,
+          backgroundColor: 'transparent',
+          tension: 0.3,
+          yAxisID: 'y',
+          order: 1,
+          pointBackgroundColor: COLORS.rose,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        y:  { beginAtZero: true, max: 100, position: 'left',  title: { display: true, text: 'Completion %' }, grid: { color: COLORS.border } },
+        y1: { beginAtZero: true, position: 'right', title: { display: true, text: 'Event count' }, grid: { display: false } },
+        x: { grid: { display: false } },
+      },
+      plugins: { legend: { position: 'top', align: 'end' } },
+    },
+  });
+}
+
+function renderNewPlayers(rows) {
+  destroyChart('newPlayers');
+  // rows arrive ASC by date from the query.
+  charts.newPlayers = new Chart($('#chartNewPlayers').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.created_date),
+      datasets: [{
+        label: 'New players',
+        data: rows.map(r => r.new_users),
+        backgroundColor: COLORS.mint,
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, grid: { color: COLORS.border } },
+        x: { grid: { display: false } },
+      },
+      plugins: { legend: { display: false } },
+    },
+  });
+}
+
+function renderGeo(rows) {
+  destroyChart('geo');
+  charts.geo = new Chart($('#chartGeo').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.country),
+      datasets: [{
+        label: 'Players',
+        data: rows.map(r => r.players),
+        backgroundColor: COLORS.ios,
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { beginAtZero: true, grid: { color: COLORS.border } },
+        y: { grid: { display: false } },
+      },
+      plugins: { legend: { display: false } },
+    },
+  });
+}
+
 // ─── Orchestration ───────────────────────────────────────────────────
 
 async function loadAndRender() {
@@ -287,6 +390,9 @@ async function loadAndRender() {
     renderPlays(data.playsPerGame);
     renderPlatform(data.platformSplit);
     renderScoreEfficiency(data.scoreEfficiencyPerGame);
+    renderFunnel(data.funnelByGame || []);
+    renderNewPlayers(data.newPlayersPerDay || []);
+    renderGeo(data.geoDistribution || []);
 
     if (Object.keys(data.errors || {}).length > 0) {
       console.warn('Some queries failed:', data.errors);
