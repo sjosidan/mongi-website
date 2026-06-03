@@ -14,11 +14,21 @@ const COLORS = {
   mint: '#14B8A6',
   mintLight: '#5EEAD4',
   rose: '#FF6B9D',
+  amber: '#F59E0B',
   ink: '#0F172A',
   muted: '#94A3B8',
   border: '#E2E8F0',
-  hmos: '#3B82F6',
-  flutter: '#14B8A6',
+  ios: '#0F172A',          // ink — Apple-y
+  android: '#22C55E',      // forest — Android-y
+  harmonyos: '#3B82F6',    // ocean blue — Huawei-y
+  unknown: '#94A3B8',
+};
+
+const PLATFORM_LABEL = {
+  ios: 'iOS',
+  android: 'Android',
+  harmonyos: 'HarmonyOS',
+  unknown: 'Unknown',
 };
 
 // Chart.js global defaults — match site typography
@@ -82,10 +92,16 @@ function destroyChart(key) {
 function renderTiles(summary, platformSplit) {
   const totalPlays = summary?.total_plays ?? 0;
   const uniquePlayers = summary?.unique_players ?? 0;
-  const totalWins = summary?.total_wins ?? 0;
   const playsLast7d = summary?.plays_last_7d ?? 0;
-  const winRate = totalPlays > 0 ? Math.round((totalWins / totalPlays) * 100) : 0;
-  const hmosPlayers = platformSplit.find(p => p.platform === 'hmos')?.unique_players ?? 0;
+  const dailySharePct = summary?.daily_share_pct ?? 0;
+
+  // Per-platform player counts for the unique-players subtitle.
+  const byPlatform = Object.fromEntries(
+    (platformSplit || []).map(p => [p.platform, p.unique_players])
+  );
+  const ios = byPlatform.ios ?? 0;
+  const android = byPlatform.android ?? 0;
+  const hmos = byPlatform.harmonyos ?? 0;
 
   $('#tiles').innerHTML = `
     <div class="tile">
@@ -96,7 +112,7 @@ function renderTiles(summary, platformSplit) {
     <div class="tile">
       <div class="label">Unique players</div>
       <div class="value">${uniquePlayers.toLocaleString()}</div>
-      <div class="sub">${hmosPlayers} on HarmonyOS</div>
+      <div class="sub">${ios} iOS · ${android} Android · ${hmos} HMOS</div>
     </div>
     <div class="tile">
       <div class="label">Plays · last 7d</div>
@@ -104,9 +120,9 @@ function renderTiles(summary, platformSplit) {
       <div class="sub">rolling weekly</div>
     </div>
     <div class="tile">
-      <div class="label">Win rate</div>
-      <div class="value">${winRate}%</div>
-      <div class="sub">${totalWins.toLocaleString()} wins</div>
+      <div class="label">Daily mode share</div>
+      <div class="value">${dailySharePct}%</div>
+      <div class="sub">${(100 - dailySharePct).toFixed(1)}% unlimited</div>
     </div>
   `;
 }
@@ -158,35 +174,52 @@ function renderPlays(rows) {
     type: 'bar',
     data: {
       labels: rows.map(r => r.game),
-      datasets: [{
-        label: 'Plays',
-        data: rows.map(r => r.plays),
-        backgroundColor: COLORS.mint,
-        borderRadius: 4,
-      }],
+      datasets: [
+        {
+          label: 'Daily',
+          data: rows.map(r => r.daily_plays),
+          backgroundColor: COLORS.mint,
+          borderRadius: 4,
+          stack: 'plays',
+        },
+        {
+          label: 'Unlimited',
+          data: rows.map(r => r.unlimited_plays),
+          backgroundColor: COLORS.amber,
+          borderRadius: 4,
+          stack: 'plays',
+        },
+      ],
     },
     options: {
       indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { beginAtZero: true, grid: { color: COLORS.border } },
-        y: { grid: { display: false } },
+        x: { beginAtZero: true, stacked: true, grid: { color: COLORS.border } },
+        y: { stacked: true, grid: { display: false } },
       },
-      plugins: { legend: { display: false } },
+      plugins: { legend: { position: 'top', align: 'end' } },
     },
   });
 }
 
 function renderPlatform(rows) {
   destroyChart('platform');
+  // Order: iOS, Android, HarmonyOS, Unknown (consistent across refreshes)
+  const order = ['ios', 'android', 'harmonyos', 'unknown'];
+  const byKey = Object.fromEntries(rows.map(r => [r.platform, r]));
+  const ordered = order
+    .filter(k => byKey[k])
+    .map(k => ({ key: k, ...byKey[k] }));
+
   charts.platform = new Chart($('#chartPlatform').getContext('2d'), {
     type: 'doughnut',
     data: {
-      labels: rows.map(r => r.platform),
+      labels: ordered.map(r => PLATFORM_LABEL[r.key] ?? r.key),
       datasets: [{
-        data: rows.map(r => r.plays),
-        backgroundColor: rows.map(r => r.platform === 'hmos' ? COLORS.hmos : COLORS.flutter),
+        data: ordered.map(r => r.plays),
+        backgroundColor: ordered.map(r => COLORS[r.key] ?? COLORS.unknown),
         borderWidth: 0,
       }],
     },
@@ -198,31 +231,32 @@ function renderPlatform(rows) {
   });
 }
 
-function renderWinRate(rows) {
-  destroyChart('winRate');
+function renderScoreEfficiency(rows) {
+  destroyChart('scoreEff');
   const sorted = [...rows].sort((a, b) => b.plays - a.plays);
-  charts.winRate = new Chart($('#chartWinRate').getContext('2d'), {
+  charts.scoreEff = new Chart($('#chartScoreEff').getContext('2d'), {
     type: 'bar',
     data: {
       labels: sorted.map(r => r.game),
       datasets: [
         {
-          label: 'Win rate %',
-          data: sorted.map(r => r.win_rate_pct),
+          label: 'Plays',
+          data: sorted.map(r => r.plays),
           backgroundColor: COLORS.mint,
           borderRadius: 4,
-          yAxisID: 'y',
+          yAxisID: 'y1',
           order: 2,
         },
         {
-          label: 'Avg score',
-          data: sorted.map(r => r.avg_score),
+          label: 'Avg score % of max',
+          data: sorted.map(r => r.avg_score_pct_of_max),
           type: 'line',
           borderColor: COLORS.rose,
           backgroundColor: 'transparent',
           tension: 0.3,
-          yAxisID: 'y1',
+          yAxisID: 'y',
           order: 1,
+          pointBackgroundColor: COLORS.rose,
         },
       ],
     },
@@ -231,8 +265,8 @@ function renderWinRate(rows) {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       scales: {
-        y:  { beginAtZero: true, max: 100, position: 'left', title: { display: true, text: 'Win rate %' }, grid: { color: COLORS.border } },
-        y1: { beginAtZero: true, position: 'right', title: { display: true, text: 'Avg score' }, grid: { display: false } },
+        y:  { beginAtZero: true, max: 100, position: 'left',  title: { display: true, text: 'Avg score % of max' }, grid: { color: COLORS.border } },
+        y1: { beginAtZero: true, position: 'right', title: { display: true, text: 'Plays' }, grid: { display: false } },
         x: { grid: { display: false } },
       },
       plugins: { legend: { position: 'top', align: 'end' } },
@@ -252,7 +286,7 @@ async function loadAndRender() {
     renderDaily(data.dailyTrend);
     renderPlays(data.playsPerGame);
     renderPlatform(data.platformSplit);
-    renderWinRate(data.winRatePerGame);
+    renderScoreEfficiency(data.scoreEfficiencyPerGame);
 
     if (Object.keys(data.errors || {}).length > 0) {
       console.warn('Some queries failed:', data.errors);

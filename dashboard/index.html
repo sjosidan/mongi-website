@@ -154,20 +154,20 @@
 
     <div class="card">
       <h2>Plays per game</h2>
-      <p class="sub">All-time game popularity, top 30.</p>
+      <p class="sub">Stacked: daily mode vs unlimited. Top 30 by total plays.</p>
       <canvas id="chartPlays"></canvas>
     </div>
 
     <div class="card">
       <h2>Platform split</h2>
-      <p class="sub">HMOS vs iOS / Android.</p>
+      <p class="sub">iOS / Android / HarmonyOS, by total plays.</p>
       <canvas id="chartPlatform"></canvas>
     </div>
 
     <div class="card wide">
-      <h2>Win rate &amp; average score by game</h2>
-      <p class="sub">Win rate as %, average score on the secondary axis.</p>
-      <canvas id="chartWinRate"></canvas>
+      <h2>Average score as % of max per game</h2>
+      <p class="sub">Line = how well players score relative to the game's max. Bars = total plays. Normalises across games with different score ceilings.</p>
+      <canvas id="chartScoreEff"></canvas>
     </div>
   </div>
 
