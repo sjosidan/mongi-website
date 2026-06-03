@@ -679,8 +679,6 @@ async function loadAndRender() {
     // Scoring health
     renderScoreDistribution(data.scoreDistribution || []);
     renderTimeToComplete(data.timeToComplete || []);
-    renderHints(data.hintsPerGame || []);
-    renderDifficulty(data.difficultyMix || []);
     renderPlays(data.playsPerGame);
     renderScoreEfficiency(data.scoreEfficiencyPerGame);
     renderFunnel(data.funnelByGame || []);
