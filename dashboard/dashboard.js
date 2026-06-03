@@ -39,14 +39,18 @@ Chart.defaults.borderColor = COLORS.border;
 const $ = (sel) => document.querySelector(sel);
 
 // For horizontal bar charts: size the canvas based on row count so every
-// label gets enough vertical space (Chart.js with maintainAspectRatio:
-// false will fill whatever container height we give it).
-function fitHorizontalBars(canvasId, rowCount, perRow = 28, minHeight = 220) {
+// label gets enough vertical space, but CAP at 700px to keep the backing
+// pixel buffer (canvas memory × devicePixelRatio²) from blowing up the tab
+// on high-DPI displays. 700px ÷ 30 rows ≈ 23px per label which is enough
+// to read game names without scrolling forever.
+function fitHorizontalBars(canvasId, rowCount, perRow = 22, minHeight = 220, maxHeight = 700) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
-  const desired = Math.max(minHeight, rowCount * perRow + 60);
-  canvas.style.maxHeight = 'none';
+  const desired = Math.min(maxHeight, Math.max(minHeight, rowCount * perRow + 60));
   canvas.style.height = `${desired}px`;
+  // Set max-height explicitly to the same value (rather than 'none') so the
+  // card CSS doesn't lift the cap globally on subsequent re-renders.
+  canvas.style.maxHeight = `${desired}px`;
 }
 
 // ─── Token gate ──────────────────────────────────────────────────────
