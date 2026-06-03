@@ -80,6 +80,24 @@ $('#refreshBtn').addEventListener('click', () => {
   loadAndRender();
 });
 
+// Time-window toggle handler — each .window-toggle has data-toggle naming
+// the chart it controls. Clicking a button updates state and re-renders.
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.window-toggle button');
+  if (!btn) return;
+  const toggle = btn.parentElement;
+  const which = toggle.dataset.toggle;
+  const win = btn.dataset.win;
+  if (!which || !win || !(which in windowState)) return;
+
+  windowState[which] = win;
+  toggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+
+  if (which === 'plays')     renderPlays(null);
+  if (which === 'scoreEff')  renderScoreEfficiency(null);
+  if (which === 'cat')       renderCategoryActivity(null);
+});
+
 // ─── Data fetch ──────────────────────────────────────────────────────
 
 async function fetchDashboard() {
@@ -183,28 +201,38 @@ function renderDaily(rows) {
   });
 }
 
+// Active window state for the toggle-driven charts. Default 7d.
+const windowState = { plays: 'd7', scoreEff: 'd7', cat: 'd7' };
+// Last-fetched data — kept so the toggle can re-render without refetching.
+const lastData = { plays: [], scoreEff: [], cat: [] };
+
 function renderPlays(rows) {
+  if (rows) lastData.plays = rows;
+  const data = lastData.plays;
+  const win = windowState.plays;
+  // Map window key → (daily, unlimited) field names
+  const fields = {
+    today: ['today_daily', 'today_unlimited'],
+    d7:    ['d7_daily',    'd7_unlimited'],
+    d30:   ['d30_daily',   'd30_unlimited'],
+    all:   ['all_daily',   'all_unlimited'],
+  }[win];
+
+  // Filter out games with zero plays in the selected window
+  const visible = data
+    .map(r => ({ game: r.game, daily: r[fields[0]] || 0, unlimited: r[fields[1]] || 0 }))
+    .filter(r => r.daily + r.unlimited > 0)
+    .sort((a, b) => (b.daily + b.unlimited) - (a.daily + a.unlimited));
+
   destroyChart('plays');
-  fitHorizontalBars('chartPlays', rows.length);
+  fitHorizontalBars('chartPlays', visible.length);
   charts.plays = new Chart($('#chartPlays').getContext('2d'), {
     type: 'bar',
     data: {
-      labels: rows.map(r => r.game),
+      labels: visible.map(r => r.game),
       datasets: [
-        {
-          label: 'Daily',
-          data: rows.map(r => r.daily_plays),
-          backgroundColor: COLORS.mint,
-          borderRadius: 4,
-          stack: 'plays',
-        },
-        {
-          label: 'Unlimited',
-          data: rows.map(r => r.unlimited_plays),
-          backgroundColor: COLORS.amber,
-          borderRadius: 4,
-          stack: 'plays',
-        },
+        { label: 'Daily',     data: visible.map(r => r.daily),     backgroundColor: COLORS.mint,  borderRadius: 4, stack: 'plays' },
+        { label: 'Unlimited', data: visible.map(r => r.unlimited), backgroundColor: COLORS.amber, borderRadius: 4, stack: 'plays' },
       ],
     },
     options: {
@@ -248,32 +276,34 @@ function renderPlatform(rows) {
 }
 
 function renderScoreEfficiency(rows) {
+  if (rows) lastData.scoreEff = rows;
+  const data = lastData.scoreEff;
+  const win = windowState.scoreEff;
+  const fields = {
+    today: ['today_plays', 'today_avg_score'],
+    d7:    ['d7_plays',    'd7_avg_score'],
+    d30:   ['d30_plays',   'd30_avg_score'],
+    all:   ['all_plays',   'all_avg_score'],
+  }[win];
+
+  const visible = data
+    .map(r => ({
+      game: r.game,
+      plays: r[fields[0]] || 0,
+      avg_score: r[fields[1]] || 0,
+      pct: r.max_score && r[fields[1]] ? Math.round(1000 * r[fields[1]] / r.max_score) / 10 : 0,
+    }))
+    .filter(r => r.plays > 0)
+    .sort((a, b) => b.plays - a.plays);
+
   destroyChart('scoreEff');
-  const sorted = [...rows].sort((a, b) => b.plays - a.plays);
   charts.scoreEff = new Chart($('#chartScoreEff').getContext('2d'), {
     type: 'bar',
     data: {
-      labels: sorted.map(r => r.game),
+      labels: visible.map(r => r.game),
       datasets: [
-        {
-          label: 'Plays',
-          data: sorted.map(r => r.plays),
-          backgroundColor: COLORS.mint,
-          borderRadius: 4,
-          yAxisID: 'y1',
-          order: 2,
-        },
-        {
-          label: 'Avg score % of max',
-          data: sorted.map(r => r.avg_score_pct_of_max),
-          type: 'line',
-          borderColor: COLORS.rose,
-          backgroundColor: 'transparent',
-          tension: 0.3,
-          yAxisID: 'y',
-          order: 1,
-          pointBackgroundColor: COLORS.rose,
-        },
+        { label: 'Plays',              data: visible.map(r => r.plays), backgroundColor: COLORS.mint, borderRadius: 4, yAxisID: 'y1', order: 2 },
+        { label: 'Avg score % of max', data: visible.map(r => r.pct),   type: 'line', borderColor: COLORS.rose, backgroundColor: 'transparent', tension: 0.3, yAxisID: 'y', order: 1, pointBackgroundColor: COLORS.rose },
       ],
     },
     options: {
@@ -286,6 +316,44 @@ function renderScoreEfficiency(rows) {
         x: { grid: { display: false } },
       },
       plugins: { legend: { position: 'top', align: 'end' } },
+    },
+  });
+}
+
+const CATEGORY_LABEL = { en: 'English', math: 'Numbers', colors: 'Colors' };
+const CATEGORY_COLOR = { en: COLORS.mint, math: COLORS.amber, colors: COLORS.rose };
+
+function renderCategoryActivity(rows) {
+  if (rows) lastData.cat = rows;
+  const data = lastData.cat;
+  const win = windowState.cat;
+  const winField = { today: 'today', d7: 'last_7d', d30: 'last_30d', all: 'all_time' }[win];
+
+  // Stable category order: English → Numbers → Colors
+  const order = ['en', 'math', 'colors'];
+  const byCat = Object.fromEntries(data.map(r => [r.category, r]));
+  const ordered = order.map(k => ({ category: k, plays: byCat[k]?.[winField] || 0 }));
+
+  destroyChart('cat');
+  charts.cat = new Chart($('#chartCategory').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ordered.map(r => CATEGORY_LABEL[r.category]),
+      datasets: [{
+        label: 'Plays',
+        data: ordered.map(r => r.plays),
+        backgroundColor: ordered.map(r => CATEGORY_COLOR[r.category]),
+        borderRadius: 6,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, grid: { color: COLORS.border } },
+        x: { grid: { display: false } },
+      },
+      plugins: { legend: { display: false } },
     },
   });
 }
@@ -488,16 +556,31 @@ function renderLastPlay(rows) {
 
 // ─── Scoring health section ──────────────────────────────────────────
 
+// Score-distribution sort state. Defaults to spread ascending (narrow
+// spread first — these are the scoring algos that need tuning).
+const scoreDistSort = { col: 'spread', dir: 'asc' };
+let scoreDistData = [];
+
 function renderScoreDistribution(rows) {
-  // Render as a TABLE, sorted by spread asc (narrow spread first — those need tuning)
-  const enriched = rows.map(r => ({
-    ...r,
-    spread: r.p90 - r.p10,
-  })).sort((a, b) => a.spread - b.spread);
+  if (rows) {
+    scoreDistData = rows.map(r => ({ ...r, spread: r.p90 - r.p10 }));
+  }
+  paintScoreDistribution();
+}
 
-  const maxSpread = Math.max(...enriched.map(r => r.spread), 1);
+function paintScoreDistribution() {
+  const sorted = [...scoreDistData].sort((a, b) => {
+    const av = a[scoreDistSort.col];
+    const bv = b[scoreDistSort.col];
+    if (typeof av === 'string') {
+      return scoreDistSort.dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    }
+    return scoreDistSort.dir === 'asc' ? av - bv : bv - av;
+  });
 
-  const rowsHtml = enriched.map(r => {
+  const maxSpread = Math.max(...scoreDistData.map(r => r.spread), 1);
+
+  const rowsHtml = sorted.map(r => {
     const barWidth = Math.max(8, Math.round((r.spread / maxSpread) * 120));
     return `
       <tr>
@@ -513,18 +596,43 @@ function renderScoreDistribution(rows) {
     `;
   }).join('');
 
+  // sortable header — each th carries the field name + active arrow
+  function arrow(col) {
+    if (col !== scoreDistSort.col) return '';
+    return scoreDistSort.dir === 'asc' ? ' sort-asc' : ' sort-desc';
+  }
+  const cols = [
+    ['game', 'Game'], ['plays', 'Plays'], ['min_score', 'Min'], ['p10', 'p10'],
+    ['p50', 'Median'], ['p90', 'p90'], ['max_score', 'Max'], ['spread', 'Spread (p90-p10)'],
+  ];
+  const headHtml = cols.map(([c, label]) =>
+    `<th class="sortable${arrow(c)}" data-col="${c}">${label}</th>`
+  ).join('');
+
   $('#scoreDistTable').innerHTML = `
     <div class="table-scroll">
       <table class="data-table">
-        <thead>
-          <tr>
-            <th>Game</th><th>Plays</th><th>Min</th><th>p10</th><th>Median</th><th>p90</th><th>Max</th><th>Spread (p90-p10)</th>
-          </tr>
-        </thead>
+        <thead><tr>${headHtml}</tr></thead>
         <tbody>${rowsHtml}</tbody>
       </table>
     </div>
   `;
+
+  // Wire header clicks
+  document.querySelectorAll('#scoreDistTable th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (scoreDistSort.col === col) {
+        scoreDistSort.dir = scoreDistSort.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        scoreDistSort.col = col;
+        // First click on a new column: numeric cols start descending (high
+        // values first feels natural), string cols start ascending.
+        scoreDistSort.dir = col === 'game' ? 'asc' : 'desc';
+      }
+      paintScoreDistribution();
+    });
+  });
 }
 
 function renderTimeToComplete(rows) {
@@ -676,6 +784,7 @@ async function loadAndRender() {
     renderDaily(data.dailyTrend);
     renderNewPlayers(data.newPlayersPerDay || []);
     renderPlatform(data.platformSplit);
+    renderCategoryActivity(data.categoryActivity || []);
     // Scoring health
     renderScoreDistribution(data.scoreDistribution || []);
     renderTimeToComplete(data.timeToComplete || []);

@@ -143,9 +143,29 @@
     .data-table th, .data-table td { padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--border); }
     .data-table th { font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
     .data-table td:first-child, .data-table th:first-child { text-align: left; color: var(--ink); font-weight: 500; }
+    .data-table th.sortable { cursor: pointer; user-select: none; }
+    .data-table th.sortable:hover { color: var(--ink); }
+    .data-table th.sortable::after { content: ' ↕'; opacity: 0.3; font-weight: 400; }
+    .data-table th.sortable.sort-asc::after  { content: ' ↑'; opacity: 1; color: var(--accent); }
+    .data-table th.sortable.sort-desc::after { content: ' ↓'; opacity: 1; color: var(--accent); }
     .data-table .spread-bar {
       display: inline-block; height: 8px; background: var(--accent); border-radius: 4px; vertical-align: middle;
     }
+
+    /* Time-window toggle pills (used on Plays per game + Score efficiency + Category activity) */
+    .window-toggle { display: inline-flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+    .window-toggle button {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 4px 10px; font: inherit; font-size: 12px; font-weight: 500;
+      color: var(--muted); cursor: pointer;
+    }
+    .window-toggle button:hover { color: var(--ink); }
+    .window-toggle button.active {
+      background: var(--accent); color: white; border-color: var(--accent);
+    }
+    /* Card header with title + toggle in one row */
+    .card-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+    .card-head h2 { margin: 0 !important; }
 
     /* Footer */
     footer { margin-top: 64px; padding: 24px 0; border-top: 1px solid var(--border); font-size: 13px; color: var(--soft); text-align: center; }
@@ -237,6 +257,20 @@
       <p class="sub">iOS / Android / HarmonyOS, by total plays.</p>
       <canvas id="chartPlatform"></canvas>
     </div>
+
+    <div class="card wide">
+      <div class="card-head">
+        <h2>Plays per category</h2>
+        <div class="window-toggle" data-toggle="cat">
+          <button data-win="today">Today</button>
+          <button data-win="d7" class="active">7d</button>
+          <button data-win="d30">30d</button>
+          <button data-win="all">All time</button>
+        </div>
+      </div>
+      <p class="sub">English / Numbers / Colors — the 3 prod categories.</p>
+      <canvas id="chartCategory"></canvas>
+    </div>
   </div>
 
   <!-- ════════════════════════════════════════════════════════════════
@@ -261,13 +295,29 @@
     </div>
 
     <div class="card wide">
-      <h2>Plays per game</h2>
-      <p class="sub">Stacked: daily mode vs unlimited. Top 30 by total plays.</p>
+      <div class="card-head">
+        <h2>Plays per game</h2>
+        <div class="window-toggle" data-toggle="plays">
+          <button data-win="today">Today</button>
+          <button data-win="d7" class="active">7d</button>
+          <button data-win="d30">30d</button>
+          <button data-win="all">All time</button>
+        </div>
+      </div>
+      <p class="sub">Stacked: daily mode vs unlimited. Top 30 by total plays in the selected window.</p>
       <canvas id="chartPlays"></canvas>
     </div>
 
     <div class="card wide">
-      <h2>Avg score as % of max</h2>
+      <div class="card-head">
+        <h2>Avg score as % of max</h2>
+        <div class="window-toggle" data-toggle="scoreEff">
+          <button data-win="today">Today</button>
+          <button data-win="d7" class="active">7d</button>
+          <button data-win="d30">30d</button>
+          <button data-win="all">All time</button>
+        </div>
+      </div>
       <p class="sub">Line: avg score relative to ceiling. Bars: plays. Normalises across games with different max scores.</p>
       <canvas id="chartScoreEff"></canvas>
     </div>
