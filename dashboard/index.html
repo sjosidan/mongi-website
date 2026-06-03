@@ -69,8 +69,15 @@
     .card {
       background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
       padding: 20px;
+      /* Prevent intrinsic content (wide tables, large canvases) from blowing
+         out the grid track and pushing siblings off-screen on narrow viewports. */
+      min-width: 0;
+      overflow: hidden;
     }
     .card.wide { grid-column: 1 / -1; }
+    /* Wide tables (score distribution) scroll horizontally inside the card
+       rather than overflowing the whole page. */
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .card h2 { font-size: 16px; font-weight: 700; margin: 0 0 4px 0; color: var(--ink); }
     .card p.sub { font-size: 13px; color: var(--muted); margin: 0 0 16px 0; }
     .card canvas { max-height: 260px; }

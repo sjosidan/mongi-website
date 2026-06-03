@@ -514,14 +514,16 @@ function renderScoreDistribution(rows) {
   }).join('');
 
   $('#scoreDistTable').innerHTML = `
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Game</th><th>Plays</th><th>Min</th><th>p10</th><th>Median</th><th>p90</th><th>Max</th><th>Spread (p90-p10)</th>
-        </tr>
-      </thead>
-      <tbody>${rowsHtml}</tbody>
-    </table>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Game</th><th>Plays</th><th>Min</th><th>p10</th><th>Median</th><th>p90</th><th>Max</th><th>Spread (p90-p10)</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
   `;
 }
 
