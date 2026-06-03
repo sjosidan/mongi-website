@@ -377,6 +377,265 @@ function renderGeo(rows) {
   });
 }
 
+// ─── Engagement section ──────────────────────────────────────────────
+
+function renderRetentionTiles(retention) {
+  function pct(returned, cohort) {
+    if (!cohort) return '—';
+    return (Math.round(1000 * returned / cohort) / 10).toFixed(1) + '%';
+  }
+  const r = retention || {};
+  $('#retentionTiles').innerHTML = `
+    <div class="tile">
+      <div class="label">D1 retention</div>
+      <div class="value">${pct(r.d1_returned, r.d1_cohort)}</div>
+      <div class="sub">${r.d1_returned ?? 0} of ${r.d1_cohort ?? 0} new players returned</div>
+    </div>
+    <div class="tile">
+      <div class="label">D7 retention</div>
+      <div class="value">${pct(r.d7_returned, r.d7_cohort)}</div>
+      <div class="sub">${r.d7_returned ?? 0} of ${r.d7_cohort ?? 0} returned in days 7-13</div>
+    </div>
+    <div class="tile">
+      <div class="label">D30 retention</div>
+      <div class="value">${pct(r.d30_returned, r.d30_cohort)}</div>
+      <div class="sub">${r.d30_returned ?? 0} of ${r.d30_cohort ?? 0} returned in days 30-36</div>
+    </div>
+    <div class="tile">
+      <div class="label">Cohort note</div>
+      <div class="value" style="font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--muted);">All new signups, last 180 days.</div>
+      <div class="sub">Healthy daily-game: D1 &gt; 30%, D7 &gt; 15%, D30 &gt; 5%</div>
+    </div>
+  `;
+}
+
+function renderActiveUsers(rows) {
+  destroyChart('activeUsers');
+  charts.activeUsers = new Chart($('#chartActiveUsers').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: rows.map(r => r.day),
+      datasets: [
+        { label: 'DAU', data: rows.map(r => r.dau), borderColor: COLORS.mint, backgroundColor: COLORS.mintLight + '40', fill: true, tension: 0.3 },
+        { label: 'WAU', data: rows.map(r => r.wau), borderColor: COLORS.rose, backgroundColor: 'transparent', tension: 0.3 },
+        { label: 'MAU', data: rows.map(r => r.mau), borderColor: COLORS.amber, backgroundColor: 'transparent', tension: 0.3 },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: { y: { beginAtZero: true, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
+      plugins: { legend: { position: 'top', align: 'end' } },
+    },
+  });
+}
+
+function renderStreaks(rows) {
+  destroyChart('streaks');
+  charts.streaks = new Chart($('#chartStreaks').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.bucket),
+      datasets: [{ label: 'Players', data: rows.map(r => r.users), backgroundColor: COLORS.mint, borderRadius: 4 }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
+      plugins: { legend: { display: false } },
+    },
+  });
+}
+
+function renderLastPlay(rows) {
+  destroyChart('lastPlay');
+  // Heat-gradient: green for recently active, fading to rose for churned
+  const colors = [COLORS.mint, '#5EEAD4', '#A7F3D0', '#FBBF24', '#F59E0B', '#FB7185', COLORS.rose];
+  charts.lastPlay = new Chart($('#chartLastPlay').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.bucket),
+      datasets: [{
+        label: 'Players',
+        data: rows.map(r => r.users),
+        backgroundColor: rows.map((_, i) => colors[Math.min(i, colors.length - 1)]),
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
+      plugins: { legend: { display: false } },
+    },
+  });
+}
+
+// ─── Scoring health section ──────────────────────────────────────────
+
+function renderScoreDistribution(rows) {
+  // Render as a TABLE, sorted by spread asc (narrow spread first — those need tuning)
+  const enriched = rows.map(r => ({
+    ...r,
+    spread: r.p90 - r.p10,
+  })).sort((a, b) => a.spread - b.spread);
+
+  const maxSpread = Math.max(...enriched.map(r => r.spread), 1);
+
+  const rowsHtml = enriched.map(r => {
+    const barWidth = Math.max(8, Math.round((r.spread / maxSpread) * 120));
+    return `
+      <tr>
+        <td>${r.game}</td>
+        <td>${r.plays.toLocaleString()}</td>
+        <td>${r.min_score}</td>
+        <td>${r.p10}</td>
+        <td><strong>${r.p50}</strong></td>
+        <td>${r.p90}</td>
+        <td>${r.max_score}</td>
+        <td><span class="spread-bar" style="width:${barWidth}px"></span> ${r.spread}</td>
+      </tr>
+    `;
+  }).join('');
+
+  $('#scoreDistTable').innerHTML = `
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Game</th><th>Plays</th><th>Min</th><th>p10</th><th>Median</th><th>p90</th><th>Max</th><th>Spread (p90-p10)</th>
+        </tr>
+      </thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+  `;
+}
+
+function renderTimeToComplete(rows) {
+  destroyChart('ttc');
+  charts.ttc = new Chart($('#chartTimeToComplete').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.game),
+      datasets: [
+        { label: 'Median (s)', data: rows.map(r => r.p50_seconds), backgroundColor: COLORS.mint, borderRadius: 4 },
+        { label: 'p90 (s)',    data: rows.map(r => r.p90_seconds), backgroundColor: COLORS.amber, borderRadius: 4 },
+      ],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      scales: { x: { beginAtZero: true, grid: { color: COLORS.border } }, y: { grid: { display: false } } },
+      plugins: { legend: { position: 'top', align: 'end' } },
+    },
+  });
+}
+
+function renderHints(rows) {
+  destroyChart('hints');
+  charts.hints = new Chart($('#chartHints').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.game),
+      datasets: [
+        { label: 'Avg hints', data: rows.map(r => r.avg_hints), backgroundColor: COLORS.mint, borderRadius: 4 },
+        { label: 'p90 hints', data: rows.map(r => r.p90_hints), backgroundColor: COLORS.rose, borderRadius: 4 },
+      ],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      scales: { x: { beginAtZero: true, grid: { color: COLORS.border } }, y: { grid: { display: false } } },
+      plugins: { legend: { position: 'top', align: 'end' } },
+    },
+  });
+}
+
+function renderDifficulty(rows) {
+  destroyChart('difficulty');
+  // Show as percentage stacked bars per game.
+  const labels = rows.map(r => r.game);
+  const easyPct = rows.map(r => r.total_plays ? Math.round(1000 * r.easy_plays / r.total_plays) / 10 : 0);
+  const normalPct = rows.map((r, i) => Math.max(0, 100 - easyPct[i]));
+  charts.difficulty = new Chart($('#chartDifficulty').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Easy %',   data: easyPct,   backgroundColor: COLORS.rose,  borderRadius: 4, stack: 'mix' },
+        { label: 'Normal %', data: normalPct, backgroundColor: COLORS.mint,  borderRadius: 4, stack: 'mix' },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, max: 100, stacked: true, grid: { color: COLORS.border }, title: { display: true, text: '%' } },
+        x: { stacked: true, grid: { display: false } },
+      },
+      plugins: { legend: { position: 'top', align: 'end' } },
+    },
+  });
+}
+
+// ─── Behavioral patterns section ─────────────────────────────────────
+
+function renderHourOfDay(rows) {
+  destroyChart('hourOfDay');
+  // Ensure all 24 hours are represented even if some are empty
+  const byHour = Object.fromEntries(rows.map(r => [r.hour, r.plays]));
+  const allHours = Array.from({ length: 24 }, (_, h) => ({ hour: h, plays: byHour[h] ?? 0 }));
+  charts.hourOfDay = new Chart($('#chartHourOfDay').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: allHours.map(r => String(r.hour).padStart(2, '0')),
+      datasets: [{ label: 'Plays', data: allHours.map(r => r.plays), backgroundColor: COLORS.mint, borderRadius: 4 }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
+      plugins: { legend: { display: false } },
+    },
+  });
+}
+
+function renderDayOfWeek(rows) {
+  destroyChart('dayOfWeek');
+  charts.dayOfWeek = new Chart($('#chartDayOfWeek').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.day_name),
+      datasets: [{
+        label: 'Plays',
+        data: rows.map(r => r.plays),
+        backgroundColor: rows.map(r => (r.day_num === 1 || r.day_num === 7) ? COLORS.amber : COLORS.mint),
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
+      plugins: { legend: { display: false } },
+    },
+  });
+}
+
+function renderPlatformByCountry(rows) {
+  destroyChart('platformByCountry');
+  charts.platformByCountry = new Chart($('#chartPlatformByCountry').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.country),
+      datasets: [
+        { label: 'iOS',     data: rows.map(r => r.ios),     backgroundColor: COLORS.ios,     borderRadius: 4, stack: 'plat' },
+        { label: 'Android', data: rows.map(r => r.android), backgroundColor: COLORS.android, borderRadius: 4, stack: 'plat' },
+      ],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      scales: { x: { stacked: true, beginAtZero: true, grid: { color: COLORS.border } }, y: { stacked: true, grid: { display: false } } },
+      plugins: { legend: { position: 'top', align: 'end' } },
+    },
+  });
+}
+
 // ─── Orchestration ───────────────────────────────────────────────────
 
 async function loadAndRender() {
@@ -386,13 +645,28 @@ async function loadAndRender() {
     $('#stamp').textContent = `Last refreshed: ${new Date(data.generatedAt).toLocaleString()}`;
 
     renderTiles(data.summary, data.platformSplit);
+    // Engagement
+    renderRetentionTiles(data.retention);
+    renderActiveUsers(data.activeUsers || []);
+    renderStreaks(data.streakDistribution || []);
+    renderLastPlay(data.timeSinceLastPlay || []);
+    // Trends
     renderDaily(data.dailyTrend);
-    renderPlays(data.playsPerGame);
+    renderNewPlayers(data.newPlayersPerDay || []);
     renderPlatform(data.platformSplit);
+    // Scoring health
+    renderScoreDistribution(data.scoreDistribution || []);
+    renderTimeToComplete(data.timeToComplete || []);
+    renderHints(data.hintsPerGame || []);
+    renderDifficulty(data.difficultyMix || []);
+    renderPlays(data.playsPerGame);
     renderScoreEfficiency(data.scoreEfficiencyPerGame);
     renderFunnel(data.funnelByGame || []);
-    renderNewPlayers(data.newPlayersPerDay || []);
+    // Behavioral patterns
+    renderHourOfDay(data.hourOfDay || []);
+    renderDayOfWeek(data.dayOfWeek || []);
     renderGeo(data.geoDistribution || []);
+    renderPlatformByCountry(data.platformByCountry || []);
 
     if (Object.keys(data.errors || {}).length > 0) {
       console.warn('Some queries failed:', data.errors);

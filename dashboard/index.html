@@ -119,6 +119,27 @@
       letter-spacing: 0.3px; text-transform: uppercase;
     }
 
+    /* Section dividers */
+    .section-title {
+      font-size: 13px; font-weight: 700; color: var(--ink); margin: 40px 0 16px 0;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    }
+    .section-title:first-of-type { margin-top: 0; }
+    .section-title .sub {
+      display: block; font-size: 12px; font-weight: 400;
+      color: var(--muted); text-transform: none; letter-spacing: 0; margin-top: 4px;
+    }
+
+    /* Tables (for score distribution) */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+    .data-table th, .data-table td { padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--border); }
+    .data-table th { font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    .data-table td:first-child, .data-table th:first-child { text-align: left; color: var(--ink); font-weight: 500; }
+    .data-table .spread-bar {
+      display: inline-block; height: 8px; background: var(--accent); border-radius: 4px; vertical-align: middle;
+    }
+
     /* Footer */
     footer { margin-top: 64px; padding: 24px 0; border-top: 1px solid var(--border); font-size: 13px; color: var(--soft); text-align: center; }
   </style>
@@ -151,35 +172,51 @@
     <div class="loading">Loading…</div>
   </div>
 
+  <!-- ════════════════════════════════════════════════════════════════
+       ENGAGEMENT HEALTH
+       ════════════════════════════════════════════════════════════════ -->
+  <h3 class="section-title">
+    Engagement health
+    <span class="sub">Are players sticking around? Forming habits?</span>
+  </h3>
+
+  <div id="retentionTiles" class="tiles" style="margin-top: 0;">
+    <div class="loading">Loading…</div>
+  </div>
+
+  <div class="charts">
+    <div class="card wide">
+      <h2>Active users (DAU / WAU / MAU)</h2>
+      <p class="sub">Rolling 1-day, 7-day, 30-day unique players. Stickiness = DAU÷MAU; &gt; 40% is excellent for a daily game.</p>
+      <canvas id="chartActiveUsers"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Streak distribution</h2>
+      <p class="sub">How many players are at each streak length. Right tail = strong habit formation.</p>
+      <canvas id="chartStreaks"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Time since last play</h2>
+      <p class="sub">Per-user buckets. "3+ months" is your churn pool.</p>
+      <canvas id="chartLastPlay"></canvas>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TRENDS (existing)
+       ════════════════════════════════════════════════════════════════ -->
+  <h3 class="section-title">
+    Trends
+    <span class="sub">Daily volume and new-player growth</span>
+  </h3>
+
   <div class="charts">
     <div class="card wide">
       <h2>Daily plays (last 60 days)</h2>
       <p class="sub">Total games completed per day, plus unique players.</p>
       <canvas id="chartDaily"></canvas>
-    </div>
-
-    <div class="card">
-      <h2>Plays per game</h2>
-      <p class="sub">Stacked: daily mode vs unlimited. Top 30 by total plays.</p>
-      <canvas id="chartPlays"></canvas>
-    </div>
-
-    <div class="card">
-      <h2>Platform split</h2>
-      <p class="sub">iOS / Android / HarmonyOS, by total plays.</p>
-      <canvas id="chartPlatform"></canvas>
-    </div>
-
-    <div class="card wide">
-      <h2>Average score as % of max per game</h2>
-      <p class="sub">Line = how well players score relative to the game's max. Bars = total plays. Normalises across games with different score ceilings.</p>
-      <canvas id="chartScoreEff"></canvas>
-    </div>
-
-    <div class="card wide">
-      <h2>Started vs completed funnel <span class="badge-ga4">iOS + Android only</span></h2>
-      <p class="sub">From GA4 events — counts game_started against game_completed per game. Line shows completion %. HMOS plays don't fire GA4 events so they're not in this chart; for cross-platform completion use Plays per Game.</p>
-      <canvas id="chartFunnel"></canvas>
     </div>
 
     <div class="card">
@@ -189,9 +226,95 @@
     </div>
 
     <div class="card">
+      <h2>Platform split</h2>
+      <p class="sub">iOS / Android / HarmonyOS, by total plays.</p>
+      <canvas id="chartPlatform"></canvas>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SCORING HEALTH
+       ════════════════════════════════════════════════════════════════ -->
+  <h3 class="section-title">
+    Scoring health
+    <span class="sub">Are individual games well-tuned? Which need rebalancing?</span>
+  </h3>
+
+  <div class="charts">
+    <div class="card wide">
+      <h2>Score distribution per game</h2>
+      <p class="sub">Min, p10, median (p50), p90, max scores per game. <strong>Spread = p90 − p10.</strong> Narrow spread (everyone scores ~the same) = scoring algo lacks differentiation. Sorted by spread; needs-tuning candidates rise to the top.</p>
+      <div id="scoreDistTable"></div>
+    </div>
+
+    <div class="card">
+      <h2>Time to complete per game</h2>
+      <p class="sub">p50 and p90 seconds. Fast + high score = too easy. Slow + low score = too hard.</p>
+      <canvas id="chartTimeToComplete"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Hints used per game</h2>
+      <p class="sub">Average and p90 hints used. High values flag scoring imbalance.</p>
+      <canvas id="chartHints"></canvas>
+    </div>
+
+    <div class="card wide">
+      <h2>Difficulty mode usage per game</h2>
+      <p class="sub">Easy vs Normal split. Heavy Easy-mode use on a specific game = signal that Normal is tuned too hard.</p>
+      <canvas id="chartDifficulty"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Plays per game</h2>
+      <p class="sub">Stacked: daily mode vs unlimited. Top 30 by total plays.</p>
+      <canvas id="chartPlays"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Avg score as % of max</h2>
+      <p class="sub">Line: avg score relative to ceiling. Bars: plays. Normalises across games with different max scores.</p>
+      <canvas id="chartScoreEff"></canvas>
+    </div>
+
+    <div class="card wide">
+      <h2>Started vs completed funnel <span class="badge-ga4">iOS + Android only</span></h2>
+      <p class="sub">From GA4 — game_started vs game_completed per game. Line shows completion %. HMOS missing; for full picture cross-reference Plays per Game.</p>
+      <canvas id="chartFunnel"></canvas>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       BEHAVIORAL PATTERNS
+       ════════════════════════════════════════════════════════════════ -->
+  <h3 class="section-title">
+    Behavioral patterns
+    <span class="sub">When, where, and how players play</span>
+  </h3>
+
+  <div class="charts">
+    <div class="card">
+      <h2>Hour of day (UTC)</h2>
+      <p class="sub">When players actually play. Use the peak to time the daily reminder push.</p>
+      <canvas id="chartHourOfDay"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Day of week</h2>
+      <p class="sub">Weekday vs weekend volume.</p>
+      <canvas id="chartDayOfWeek"></canvas>
+    </div>
+
+    <div class="card">
       <h2>Geographic spread <span class="badge-ga4">iOS + Android only</span></h2>
-      <p class="sub">From GA4 — top 15 countries by anonymous player count (last 60 days).</p>
+      <p class="sub">Top 15 countries by anonymous player count (last 60 days).</p>
       <canvas id="chartGeo"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>Platform by country <span class="badge-ga4">iOS + Android only</span></h2>
+      <p class="sub">Top 10 countries × iOS vs Android share. HMOS not included; for HMOS-vs-rest see the Platform Split tile.</p>
+      <canvas id="chartPlatformByCountry"></canvas>
     </div>
   </div>
 
