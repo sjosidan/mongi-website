@@ -38,6 +38,17 @@ Chart.defaults.borderColor = COLORS.border;
 
 const $ = (sel) => document.querySelector(sel);
 
+// For horizontal bar charts: size the canvas based on row count so every
+// label gets enough vertical space (Chart.js with maintainAspectRatio:
+// false will fill whatever container height we give it).
+function fitHorizontalBars(canvasId, rowCount, perRow = 28, minHeight = 220) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const desired = Math.max(minHeight, rowCount * perRow + 60);
+  canvas.style.maxHeight = 'none';
+  canvas.style.height = `${desired}px`;
+}
+
 // ─── Token gate ──────────────────────────────────────────────────────
 
 function showGate() { $('#gate').style.display = 'flex'; }
@@ -170,6 +181,7 @@ function renderDaily(rows) {
 
 function renderPlays(rows) {
   destroyChart('plays');
+  fitHorizontalBars('chartPlays', rows.length);
   charts.plays = new Chart($('#chartPlays').getContext('2d'), {
     type: 'bar',
     data: {
@@ -353,6 +365,7 @@ function renderNewPlayers(rows) {
 
 function renderGeo(rows) {
   destroyChart('geo');
+  fitHorizontalBars('chartGeo', rows.length);
   charts.geo = new Chart($('#chartGeo').getContext('2d'), {
     type: 'bar',
     data: {
@@ -510,6 +523,7 @@ function renderScoreDistribution(rows) {
 
 function renderTimeToComplete(rows) {
   destroyChart('ttc');
+  fitHorizontalBars('chartTimeToComplete', rows.length);
   charts.ttc = new Chart($('#chartTimeToComplete').getContext('2d'), {
     type: 'bar',
     data: {
@@ -530,6 +544,7 @@ function renderTimeToComplete(rows) {
 
 function renderHints(rows) {
   destroyChart('hints');
+  fitHorizontalBars('chartHints', rows.length);
   charts.hints = new Chart($('#chartHints').getContext('2d'), {
     type: 'bar',
     data: {
@@ -618,6 +633,7 @@ function renderDayOfWeek(rows) {
 
 function renderPlatformByCountry(rows) {
   destroyChart('platformByCountry');
+  fitHorizontalBars('chartPlatformByCountry', rows.length);
   charts.platformByCountry = new Chart($('#chartPlatformByCountry').getContext('2d'), {
     type: 'bar',
     data: {
