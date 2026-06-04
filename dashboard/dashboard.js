@@ -96,6 +96,7 @@ document.addEventListener('click', (e) => {
   if (which === 'plays')     renderPlays(null);
   if (which === 'scoreEff')  renderScoreEfficiency(null);
   if (which === 'cat')       renderCategoryActivity(null);
+  if (which === 'newPlayers') renderNewPlayers(null);
 });
 
 // ─── Data fetch ──────────────────────────────────────────────────────
@@ -202,9 +203,9 @@ function renderDaily(rows) {
 }
 
 // Active window state for the toggle-driven charts. Default 7d.
-const windowState = { plays: 'd7', scoreEff: 'd7', cat: 'd7' };
+const windowState = { plays: 'd7', scoreEff: 'd7', cat: 'd7', newPlayers: 'd7' };
 // Last-fetched data — kept so the toggle can re-render without refetching.
-const lastData = { plays: [], scoreEff: [], cat: [] };
+const lastData = { plays: [], scoreEff: [], cat: [], newPlayers: [] };
 
 function renderPlays(rows) {
   if (rows) lastData.plays = rows;
@@ -410,15 +411,33 @@ function renderFunnel(rows) {
 }
 
 function renderNewPlayers(rows) {
+  if (rows) lastData.newPlayers = rows;
+  const data = lastData.newPlayers;
+  const daysBack = { d7: 7, d30: 30, d60: 60 }[windowState.newPlayers] || 7;
+
+  // Build a continuous date series for the selected window (today inclusive)
+  // and look up the new-user count for each day, defaulting to 0 so the
+  // chart shows the full range without holes.
+  const byDate = Object.fromEntries(data.map(r => [r.created_date, r.new_users]));
+  const series = [];
+  const today = new Date();
+  // Strip time-of-day, work in UTC date arithmetic to avoid DST drift.
+  const todayUtc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+  for (let i = daysBack - 1; i >= 0; i--) {
+    const d = new Date(todayUtc);
+    d.setUTCDate(d.getUTCDate() - i);
+    const iso = d.toISOString().slice(0, 10);
+    series.push({ date: iso, count: byDate[iso] || 0 });
+  }
+
   destroyChart('newPlayers');
-  // rows arrive ASC by date from the query.
   charts.newPlayers = new Chart($('#chartNewPlayers').getContext('2d'), {
     type: 'bar',
     data: {
-      labels: rows.map(r => r.created_date),
+      labels: series.map(r => r.date),
       datasets: [{
         label: 'New players',
-        data: rows.map(r => r.new_users),
+        data: series.map(r => r.count),
         backgroundColor: COLORS.mint,
         borderRadius: 4,
       }],
@@ -427,7 +446,7 @@ function renderNewPlayers(rows) {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        y: { beginAtZero: true, grid: { color: COLORS.border } },
+        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: COLORS.border } },
         x: { grid: { display: false } },
       },
       plugins: { legend: { display: false } },

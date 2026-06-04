@@ -247,8 +247,15 @@
     </div>
 
     <div class="card">
-      <h2>New players per day</h2>
-      <p class="sub">First-time profile creations, last 60 days. All platforms including HMOS.</p>
+      <div class="card-head">
+        <h2>New players per day</h2>
+        <div class="window-toggle" data-toggle="newPlayers">
+          <button data-win="d7" class="active">7d</button>
+          <button data-win="d30">30d</button>
+          <button data-win="d60">60d</button>
+        </div>
+      </div>
+      <p class="sub">First-time play per user. Days with no new players show as 0. All platforms incl. HMOS.</p>
       <canvas id="chartNewPlayers"></canvas>
     </div>
 
