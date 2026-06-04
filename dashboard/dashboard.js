@@ -128,6 +128,11 @@ function renderTiles(summary, platformSplit) {
   const uniquePlayers = summary?.unique_players ?? 0;
   const playsLast7d = summary?.plays_last_7d ?? 0;
   const dailySharePct = summary?.daily_share_pct ?? 0;
+  const totalRegistered = summary?.total_registered ?? 0;
+  const activationRate = totalRegistered > 0
+    ? Math.round((uniquePlayers / totalRegistered) * 1000) / 10
+    : 0;
+  const silent = Math.max(0, totalRegistered - uniquePlayers);
 
   // Per-platform player counts for the unique-players subtitle.
   const byPlatform = Object.fromEntries(
@@ -144,7 +149,17 @@ function renderTiles(summary, platformSplit) {
       <div class="sub">all time, all platforms</div>
     </div>
     <div class="tile">
-      <div class="label">Unique players</div>
+      <div class="label">Registered</div>
+      <div class="value">${totalRegistered.toLocaleString()}</div>
+      <div class="sub">${silent.toLocaleString()} registered but never played</div>
+    </div>
+    <div class="tile">
+      <div class="label">Activation rate</div>
+      <div class="value">${activationRate}%</div>
+      <div class="sub">${uniquePlayers.toLocaleString()} of ${totalRegistered.toLocaleString()} played at least once</div>
+    </div>
+    <div class="tile">
+      <div class="label">Players · breakdown</div>
       <div class="value">${uniquePlayers.toLocaleString()}</div>
       <div class="sub">${ios} iOS · ${android} Android · ${hmos} HMOS</div>
     </div>
@@ -205,7 +220,7 @@ function renderDaily(rows) {
 // Active window state for the toggle-driven charts. Default 7d.
 const windowState = { plays: 'd7', scoreEff: 'd7', cat: 'd7', newPlayers: 'd7' };
 // Last-fetched data — kept so the toggle can re-render without refetching.
-const lastData = { plays: [], scoreEff: [], cat: [], newPlayers: [] };
+const lastData = { plays: [], scoreEff: [], cat: [], newPlayers: [], registrations: [] };
 
 function renderPlays(rows) {
   if (rows) lastData.plays = rows;
@@ -410,24 +425,33 @@ function renderFunnel(rows) {
   });
 }
 
-function renderNewPlayers(rows) {
-  if (rows) lastData.newPlayers = rows;
-  const data = lastData.newPlayers;
+// rows is the response payload {firstPlays, registrations} OR null on toggle re-render
+function renderNewPlayers(payload) {
+  if (payload) {
+    lastData.newPlayers = payload.firstPlays || [];
+    lastData.registrations = payload.registrations || [];
+  }
+  const playsData = lastData.newPlayers;
+  const regsData = lastData.registrations;
   const daysBack = { d7: 7, d30: 30, d60: 60 }[windowState.newPlayers] || 7;
 
-  // Build a continuous date series for the selected window (today inclusive)
-  // and look up the new-user count for each day, defaulting to 0 so the
-  // chart shows the full range without holes.
-  const byDate = Object.fromEntries(data.map(r => [r.created_date, r.new_users]));
+  // Build a continuous date series for the selected window. For each day,
+  // look up both registrations and first-plays, defaulting to 0. Gap
+  // between bars = users who registered but didn't play (silent installs).
+  const playsByDate = Object.fromEntries(playsData.map(r => [r.created_date, r.new_users]));
+  const regsByDate = Object.fromEntries(regsData.map(r => [r.created_date, r.new_users]));
   const series = [];
   const today = new Date();
-  // Strip time-of-day, work in UTC date arithmetic to avoid DST drift.
   const todayUtc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
   for (let i = daysBack - 1; i >= 0; i--) {
     const d = new Date(todayUtc);
     d.setUTCDate(d.getUTCDate() - i);
     const iso = d.toISOString().slice(0, 10);
-    series.push({ date: iso, count: byDate[iso] || 0 });
+    series.push({
+      date: iso,
+      registered: regsByDate[iso] || 0,
+      firstPlay: playsByDate[iso] || 0,
+    });
   }
 
   destroyChart('newPlayers');
@@ -435,21 +459,20 @@ function renderNewPlayers(rows) {
     type: 'bar',
     data: {
       labels: series.map(r => r.date),
-      datasets: [{
-        label: 'New players',
-        data: series.map(r => r.count),
-        backgroundColor: COLORS.mint,
-        borderRadius: 4,
-      }],
+      datasets: [
+        { label: 'Registered',  data: series.map(r => r.registered), backgroundColor: COLORS.amber, borderRadius: 4 },
+        { label: 'First play',  data: series.map(r => r.firstPlay),  backgroundColor: COLORS.mint,  borderRadius: 4 },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       scales: {
         y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: COLORS.border } },
         x: { grid: { display: false } },
       },
-      plugins: { legend: { display: false } },
+      plugins: { legend: { position: 'top', align: 'end' } },
     },
   });
 }
@@ -801,7 +824,10 @@ async function loadAndRender() {
     renderLastPlay(data.timeSinceLastPlay || []);
     // Trends
     renderDaily(data.dailyTrend);
-    renderNewPlayers(data.newPlayersPerDay || []);
+    renderNewPlayers({
+      firstPlays:    data.newPlayersPerDay   || [],
+      registrations: data.registrationsPerDay || [],
+    });
     renderPlatform(data.platformSplit);
     renderCategoryActivity(data.categoryActivity || []);
     // Scoring health
