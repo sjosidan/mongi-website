@@ -260,8 +260,16 @@
     </div>
 
     <div class="card">
-      <h2>Platform split</h2>
-      <p class="sub">iOS / Android / HarmonyOS, by total plays.</p>
+      <div class="card-head">
+        <h2>Platform split</h2>
+        <div class="window-toggle" data-toggle="platform">
+          <button data-win="today">Today</button>
+          <button data-win="d7" class="active">7d</button>
+          <button data-win="d30">30d</button>
+          <button data-win="all">All time</button>
+        </div>
+      </div>
+      <p class="sub">iOS / Android / HarmonyOS, by plays in the selected window.</p>
       <canvas id="chartPlatform"></canvas>
     </div>
 

@@ -97,6 +97,7 @@ document.addEventListener('click', (e) => {
   if (which === 'scoreEff')  renderScoreEfficiency(null);
   if (which === 'cat')       renderCategoryActivity(null);
   if (which === 'newPlayers') renderNewPlayers(null);
+  if (which === 'platform')   renderPlatform(null);
 });
 
 // ─── Data fetch ──────────────────────────────────────────────────────
@@ -135,8 +136,10 @@ function renderTiles(summary, platformSplit) {
   const silent = Math.max(0, totalRegistered - uniquePlayers);
 
   // Per-platform player counts for the unique-players subtitle.
+  // Tiles always show all-time so the subtitle stays stable regardless of
+  // the Platform Split chart's window toggle.
   const byPlatform = Object.fromEntries(
-    (platformSplit || []).map(p => [p.platform, p.unique_players])
+    (platformSplit || []).map(p => [p.platform, p.all_players ?? 0])
   );
   const ios = byPlatform.ios ?? 0;
   const android = byPlatform.android ?? 0;
@@ -218,9 +221,9 @@ function renderDaily(rows) {
 }
 
 // Active window state for the toggle-driven charts. Default 7d.
-const windowState = { plays: 'd7', scoreEff: 'd7', cat: 'd7', newPlayers: 'd7' };
+const windowState = { plays: 'd7', scoreEff: 'd7', cat: 'd7', newPlayers: 'd7', platform: 'd7' };
 // Last-fetched data — kept so the toggle can re-render without refetching.
-const lastData = { plays: [], scoreEff: [], cat: [], newPlayers: [], registrations: [] };
+const lastData = { plays: [], scoreEff: [], cat: [], newPlayers: [], registrations: [], platform: [] };
 
 function renderPlays(rows) {
   if (rows) lastData.plays = rows;
@@ -265,14 +268,18 @@ function renderPlays(rows) {
 }
 
 function renderPlatform(rows) {
-  destroyChart('platform');
+  if (rows) lastData.platform = rows;
+  const data = lastData.platform;
+  const playsField = { today: 'today_plays', d7: 'd7_plays', d30: 'd30_plays', all: 'all_plays' }[windowState.platform];
+
   // Order: iOS, Android, HarmonyOS, Unknown (consistent across refreshes)
   const order = ['ios', 'android', 'harmonyos', 'unknown'];
-  const byKey = Object.fromEntries(rows.map(r => [r.platform, r]));
+  const byKey = Object.fromEntries(data.map(r => [r.platform, r]));
   const ordered = order
-    .filter(k => byKey[k])
-    .map(k => ({ key: k, ...byKey[k] }));
+    .filter(k => byKey[k] && (byKey[k][playsField] || 0) > 0)
+    .map(k => ({ key: k, plays: byKey[k][playsField] }));
 
+  destroyChart('platform');
   charts.platform = new Chart($('#chartPlatform').getContext('2d'), {
     type: 'doughnut',
     data: {
