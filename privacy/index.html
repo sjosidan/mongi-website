@@ -86,8 +86,9 @@
       margin-bottom: 16px;
     }
     .platform-card.android .ico { background: #fff; border: 1px solid var(--border); }
-    .platform-card.harmonyos .ico { background: linear-gradient(135deg, #DC2626, #F97316); }
+    .platform-card.harmonyos .ico { background: transparent; padding: 0; }
     .platform-card .ico svg { width: 30px; height: 30px; }
+    .platform-card .ico img { width: 56px; height: 56px; border-radius: 14px; display: block; }
 
     .platform-card h3 {
       font-size: 22px;
@@ -204,10 +205,7 @@
 
       <a class="platform-card harmonyos" href="harmonyos/">
         <div class="ico">
-          <!-- AppGallery-style stylised "A" on the red square -->
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 3.5 3.5 20.5h3.4l1.7-3.6h6.8l1.7 3.6h3.4L12 3.5zm-2 11 2-4.3 2 4.3h-4z"/>
-          </svg>
+          <img src="../assets/appgallery-icon.png" alt="AppGallery" />
         </div>
         <h3>HarmonyOS</h3>
         <p>Huawei AppGallery. Huawei Account Kit sign in, Firebase backend, EU-hosted.</p>
