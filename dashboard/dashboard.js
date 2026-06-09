@@ -129,21 +129,43 @@ function renderTiles(summary, platformSplit) {
   const uniquePlayers = summary?.unique_players ?? 0;
   const playsLast7d = summary?.plays_last_7d ?? 0;
   const dailySharePct = summary?.daily_share_pct ?? 0;
-  const totalRegistered = summary?.total_registered ?? 0;
-  const activationRate = totalRegistered > 0
-    ? Math.round((uniquePlayers / totalRegistered) * 1000) / 10
-    : 0;
-  const silent = Math.max(0, totalRegistered - uniquePlayers);
+  // "Profiles" = users that have a Firestore /users/{uid} doc. That doc is
+  // only created on the first getProfile call from the client. A user can
+  // play (anon login → submit score) without ever calling getProfile, so
+  // unique_players can exceed total_profiles. We surface both directions:
+  //   - silent: profile exists but no score → registered-but-never-played
+  //   - anonymous: scored but no profile doc → never-registered players
+  // Previously the dashboard clamped silent to max(0, …) which hid the
+  // anonymous case entirely.
+  const totalProfiles = summary?.total_registered ?? 0;
+  const silent = Math.max(0, totalProfiles - uniquePlayers);
+  const anonymous = Math.max(0, uniquePlayers - totalProfiles);
+  // Activation only makes sense when more profiles than players — otherwise
+  // it would round to "more than 100%" which is meaningless.
+  const activationRate = totalProfiles > 0 && uniquePlayers <= totalProfiles
+    ? Math.round((uniquePlayers / totalProfiles) * 1000) / 10
+    : null;
 
-  // Per-platform player counts for the unique-players subtitle.
-  // Tiles always show all-time so the subtitle stays stable regardless of
-  // the Platform Split chart's window toggle.
+  // Per-platform player counts for the players-breakdown tile. Tiles
+  // always show all-time so the subtitle stays stable regardless of the
+  // Platform Split chart's window toggle. Note: a user who plays on
+  // multiple platforms is counted in each per-platform bucket, so these
+  // numbers can sum to MORE than the all-platforms unique_players total.
   const byPlatform = Object.fromEntries(
     (platformSplit || []).map(p => [p.platform, p.all_players ?? 0])
   );
   const ios = byPlatform.ios ?? 0;
   const android = byPlatform.android ?? 0;
   const hmos = byPlatform.harmonyos ?? 0;
+  const platformSum = ios + android + hmos;
+  const crossPlatform = Math.max(0, platformSum - uniquePlayers);
+
+  // Activation tile body — different copy depending on which side has more.
+  const activationBody = activationRate !== null
+    ? `<div class="value">${activationRate}%</div>
+       <div class="sub">${uniquePlayers.toLocaleString()} of ${totalProfiles.toLocaleString()} profiles played</div>`
+    : `<div class="value">${anonymous.toLocaleString()}</div>
+       <div class="sub">anonymous players (scored without a profile doc)</div>`;
 
   $('#tiles').innerHTML = `
     <div class="tile">
@@ -152,19 +174,18 @@ function renderTiles(summary, platformSplit) {
       <div class="sub">all time, all platforms</div>
     </div>
     <div class="tile">
-      <div class="label">Registered</div>
-      <div class="value">${totalRegistered.toLocaleString()}</div>
-      <div class="sub">${silent.toLocaleString()} registered but never played</div>
+      <div class="label">Profiles</div>
+      <div class="value">${totalProfiles.toLocaleString()}</div>
+      <div class="sub">${silent.toLocaleString()} profile created but never played</div>
     </div>
     <div class="tile">
-      <div class="label">Activation rate</div>
-      <div class="value">${activationRate}%</div>
-      <div class="sub">${uniquePlayers.toLocaleString()} of ${totalRegistered.toLocaleString()} played at least once</div>
+      <div class="label">${activationRate !== null ? 'Activation rate' : 'Anonymous players'}</div>
+      ${activationBody}
     </div>
     <div class="tile">
       <div class="label">Players · breakdown</div>
       <div class="value">${uniquePlayers.toLocaleString()}</div>
-      <div class="sub">${ios} iOS · ${android} Android · ${hmos} HMOS</div>
+      <div class="sub">${ios} iOS · ${android} Android · ${hmos} HMOS${crossPlatform > 0 ? ` <span title="multi-platform users counted in each">(+${crossPlatform} cross-platform)</span>` : ''}</div>
     </div>
     <div class="tile">
       <div class="label">Plays · last 7d</div>
@@ -566,15 +587,29 @@ function renderActiveUsers(rows) {
 
 function renderStreaks(rows) {
   destroyChart('streaks');
+  // The SQL GROUP BY drops empty buckets, so a chart with rows
+  //   ['1-3': 13, '4-7': 3, '31-100': 1]
+  // would render as three bars with no visual hint that 8-14 and 15-30
+  // are zero. Pad with the full bucket list so the gaps are explicit.
+  const ALL_BUCKETS = [
+    { bucket: '1-3',    sort_order: 1 },
+    { bucket: '4-7',    sort_order: 2 },
+    { bucket: '8-14',   sort_order: 3 },
+    { bucket: '15-30',  sort_order: 4 },
+    { bucket: '31-100', sort_order: 5 },
+    { bucket: '100+',   sort_order: 6 },
+  ];
+  const byBucket = Object.fromEntries(rows.map(r => [r.bucket, r.users]));
+  const padded = ALL_BUCKETS.map(b => ({ bucket: b.bucket, users: byBucket[b.bucket] ?? 0 }));
   charts.streaks = new Chart($('#chartStreaks').getContext('2d'), {
     type: 'bar',
     data: {
-      labels: rows.map(r => r.bucket),
-      datasets: [{ label: 'Players', data: rows.map(r => r.users), backgroundColor: COLORS.mint, borderRadius: 4 }],
+      labels: padded.map(r => r.bucket),
+      datasets: [{ label: 'Players', data: padded.map(r => r.users), backgroundColor: COLORS.mint, borderRadius: 4 }],
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
       plugins: { legend: { display: false } },
     },
   });
@@ -584,20 +619,27 @@ function renderLastPlay(rows) {
   destroyChart('lastPlay');
   // Heat-gradient: green for recently active, fading to rose for churned
   const colors = [COLORS.mint, '#5EEAD4', '#A7F3D0', '#FBBF24', '#F59E0B', '#FB7185', COLORS.rose];
+  // Pad zero-count buckets so the gradient stays meaningful end-to-end
+  // (same SQL-GROUP-BY-drops-empty-rows problem as renderStreaks).
+  const ALL_BUCKETS = [
+    'Today', '1-2 days', '3-7 days', '1-2 weeks', '2-4 weeks', '1-3 months', '3+ months',
+  ];
+  const byBucket = Object.fromEntries(rows.map(r => [r.bucket, r.users]));
+  const padded = ALL_BUCKETS.map(b => ({ bucket: b, users: byBucket[b] ?? 0 }));
   charts.lastPlay = new Chart($('#chartLastPlay').getContext('2d'), {
     type: 'bar',
     data: {
-      labels: rows.map(r => r.bucket),
+      labels: padded.map(r => r.bucket),
       datasets: [{
         label: 'Players',
-        data: rows.map(r => r.users),
-        backgroundColor: rows.map((_, i) => colors[Math.min(i, colors.length - 1)]),
+        data: padded.map(r => r.users),
+        backgroundColor: padded.map((_, i) => colors[Math.min(i, colors.length - 1)]),
         borderRadius: 4,
       }],
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: COLORS.border } }, x: { grid: { display: false } } },
       plugins: { legend: { display: false } },
     },
   });
@@ -680,6 +722,112 @@ function paintScoreDistribution() {
         scoreDistSort.dir = col === 'game' ? 'asc' : 'desc';
       }
       paintScoreDistribution();
+    });
+  });
+}
+
+// ─── Game difficulty health ──────────────────────────────────────────
+//
+// Sortable table that combines five signals per game so it's easy to
+// spot games that need tuning. Difficulty tag mirrors the rule in
+// game-analytics.ts: scorePct > 85 = too_easy, 60-85 = balanced,
+// 40-60 = hard, < 40 = too_hard. Default sort puts games most likely
+// to need attention first (highest avg_score_pct — the easy ones —
+// then sortable to anything else).
+const difficultySort = { col: 'avg_score_pct', dir: 'desc' };
+let difficultyData = [];
+
+function difficultyTag(pct) {
+  if (pct == null) return { label: '—', cls: 'unknown' };
+  if (pct > 85) return { label: 'too easy',  cls: 'too-easy' };
+  if (pct >= 60) return { label: 'balanced', cls: 'balanced' };
+  if (pct >= 40) return { label: 'hard',     cls: 'hard' };
+  return { label: 'too hard', cls: 'too-hard' };
+}
+
+function fmtTime(sec) {
+  if (sec == null || isNaN(sec)) return '—';
+  if (sec < 60) return `${sec}s`;
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return s > 0 ? `${m}m ${s}s` : `${m}m`;
+}
+
+function renderGameDifficultyHealth(rows) {
+  if (rows) difficultyData = rows.slice();
+  paintGameDifficultyHealth();
+}
+
+function paintGameDifficultyHealth() {
+  const sorted = [...difficultyData].sort((a, b) => {
+    const av = a[difficultySort.col];
+    const bv = b[difficultySort.col];
+    if (typeof av === 'string') {
+      return difficultySort.dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    }
+    return difficultySort.dir === 'asc' ? (av ?? 0) - (bv ?? 0) : (bv ?? 0) - (av ?? 0);
+  });
+
+  const rowsHtml = sorted.map(r => {
+    const tag = difficultyTag(r.avg_score_pct);
+    return `
+      <tr>
+        <td>${r.game}</td>
+        <td>${(r.plays ?? 0).toLocaleString()}</td>
+        <td>${r.win_rate ?? 0}%</td>
+        <td>${r.perfect_rate ?? 0}%</td>
+        <td>${r.loss_rate ?? 0}%</td>
+        <td>${r.avg_score_pct ?? 0}%</td>
+        <td>${fmtTime(r.p50_time_sec)}</td>
+        <td><span class="diff-tag diff-${tag.cls}">${tag.label}</span></td>
+      </tr>
+    `;
+  }).join('');
+
+  function arrow(col) {
+    if (col !== difficultySort.col) return '';
+    return difficultySort.dir === 'asc' ? ' sort-asc' : ' sort-desc';
+  }
+  const cols = [
+    ['game',          'Game'],
+    ['plays',         'Plays'],
+    ['win_rate',      'Win %'],
+    ['perfect_rate',  'Perfect %'],
+    ['loss_rate',     'Loss %'],
+    ['avg_score_pct', 'Avg % of max'],
+    ['p50_time_sec',  'Median time'],
+    ['avg_score_pct', 'Difficulty'],
+  ];
+  // Two columns use avg_score_pct as their sort key (the % column and the
+  // Difficulty tag); de-dupe so the second one becomes the literal label.
+  // Simplest: emit the % column as sortable and the Difficulty column as
+  // non-sortable (it's a derived label, redundant to sort by).
+  const headHtml = cols.map(([c, label], i) => {
+    if (i === cols.length - 1) {
+      return `<th>${label}</th>`;
+    }
+    return `<th class="sortable${arrow(c)}" data-col="${c}">${label}</th>`;
+  }).join('');
+
+  $('#difficultyTable').innerHTML = `
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr>${headHtml}</tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+  `;
+
+  document.querySelectorAll('#difficultyTable th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (difficultySort.col === col) {
+        difficultySort.dir = difficultySort.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        difficultySort.col = col;
+        difficultySort.dir = col === 'game' ? 'asc' : 'desc';
+      }
+      paintGameDifficultyHealth();
     });
   });
 }
@@ -794,6 +942,111 @@ function renderDayOfWeek(rows) {
   });
 }
 
+// Naive semver compare: split on '.', compare numerically segment by
+// segment. Good enough for our X.Y.Z tags (where 1.0.10 > 1.0.4). Returns
+// negative if a < b, positive if a > b, 0 if equal. Non-numeric segments
+// fall back to a localeCompare so '1.0.4-rc1' lands somewhere stable.
+function compareVersions(a, b) {
+  const pa = a.split('.');
+  const pb = b.split('.');
+  const len = Math.max(pa.length, pb.length);
+  for (let i = 0; i < len; i++) {
+    const ai = pa[i] ?? '0';
+    const bi = pb[i] ?? '0';
+    const an = parseInt(ai, 10);
+    const bn = parseInt(bi, 10);
+    if (!isNaN(an) && !isNaN(bn) && String(an) === ai && String(bn) === bi) {
+      if (an !== bn) return an - bn;
+    } else {
+      const cmp = ai.localeCompare(bi);
+      if (cmp !== 0) return cmp;
+    }
+  }
+  return 0;
+}
+
+function renderAppVersionDistribution(rows) {
+  destroyChart('appVersion');
+  // Group rows by platform → { version: users }, then build a stacked
+  // horizontal bar per platform with one segment per version. Each
+  // platform's segments sum to 100% so you can compare adoption shape
+  // side-by-side even when one platform has 10× the users.
+  const byPlatform = {};
+  for (const r of rows) {
+    if (!byPlatform[r.platform]) byPlatform[r.platform] = [];
+    byPlatform[r.platform].push({ version: r.version, users: r.users });
+  }
+
+  // All unique versions across platforms — sorted newest-first so the
+  // stacked bar segments line up consistently. Newest version = the
+  // colourful end of the gradient, oldest = grey.
+  const allVersionsSet = new Set();
+  Object.values(byPlatform).forEach(arr => arr.forEach(r => allVersionsSet.add(r.version)));
+  const allVersions = [...allVersionsSet].sort(compareVersions).reverse();
+  // Mint at the top (newest) fading to rose-y for older builds.
+  const palette = ['#14B8A6', '#2DD4BF', '#5EEAD4', '#F59E0B', '#FB7185', '#FF6B9D', '#94A3B8'];
+  const versionColor = Object.fromEntries(allVersions.map((v, i) => [v, palette[Math.min(i, palette.length - 1)]]));
+
+  // Order platforms iOS → Android → HMOS so the chart reads consistently
+  // across refreshes. Drop platforms with no version data so we don't
+  // render an empty row.
+  const platformOrder = ['ios', 'android', 'harmonyos'];
+  const platforms = platformOrder.filter(p => byPlatform[p] && byPlatform[p].length > 0);
+
+  // Each version is its own dataset (so legend filtering works). Convert
+  // raw user counts to percentages per platform so bars are comparable.
+  const datasets = allVersions.map(v => ({
+    label: v,
+    data: platforms.map(p => {
+      const entries = byPlatform[p] || [];
+      const total = entries.reduce((s, e) => s + e.users, 0);
+      if (!total) return 0;
+      const found = entries.find(e => e.version === v);
+      return found ? Math.round(1000 * found.users / total) / 10 : 0;
+    }),
+    backgroundColor: versionColor[v],
+    borderRadius: 4,
+    stack: 'version',
+  }));
+
+  charts.appVersion = new Chart($('#chartAppVersion').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: platforms.map(p => PLATFORM_LABEL[p] ?? p),
+      datasets,
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: {
+          beginAtZero: true, max: 100, stacked: true,
+          grid: { color: COLORS.border },
+          ticks: { callback: v => `${v}%` },
+        },
+        y: { stacked: true, grid: { display: false } },
+      },
+      plugins: {
+        legend: { position: 'top', align: 'end' },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const platform = platforms[ctx.dataIndex];
+              const entries = byPlatform[platform] || [];
+              const total = entries.reduce((s, e) => s + e.users, 0);
+              const found = entries.find(e => e.version === ctx.dataset.label);
+              const users = found ? found.users : 0;
+              return `v${ctx.dataset.label}: ${ctx.parsed.x}% (${users} of ${total})`;
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 function renderPlatformByCountry(rows) {
   destroyChart('platformByCountry');
   fitHorizontalBars('chartPlatformByCountry', rows.length);
@@ -838,6 +1091,7 @@ async function loadAndRender() {
     renderPlatform(data.platformSplit);
     renderCategoryActivity(data.categoryActivity || []);
     // Scoring health
+    renderGameDifficultyHealth(data.gameDifficultyHealth || []);
     renderScoreDistribution(data.scoreDistribution || []);
     renderTimeToComplete(data.timeToComplete || []);
     renderPlays(data.playsPerGame);
@@ -848,6 +1102,7 @@ async function loadAndRender() {
     renderDayOfWeek(data.dayOfWeek || []);
     renderGeo(data.geoDistribution || []);
     renderPlatformByCountry(data.platformByCountry || []);
+    renderAppVersionDistribution(data.appVersionDistribution || []);
 
     if (Object.keys(data.errors || {}).length > 0) {
       console.warn('Some queries failed:', data.errors);

@@ -151,6 +151,15 @@
     .data-table .spread-bar {
       display: inline-block; height: 8px; background: var(--accent); border-radius: 4px; vertical-align: middle;
     }
+    .diff-tag {
+      display: inline-block; padding: 2px 9px; border-radius: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase;
+    }
+    .diff-too-easy { background: #FEF3C7; color: #92400E; }   /* amber — easy */
+    .diff-balanced { background: #DCFCE7; color: #166534; }   /* green — balanced */
+    .diff-hard     { background: #FED7AA; color: #9A3412; }   /* orange — hard */
+    .diff-too-hard { background: #FECACA; color: #991B1B; }   /* red — too hard */
+    .diff-unknown  { background: var(--surface); color: var(--muted); }
 
     /* Time-window toggle pills (used on Plays per game + Score efficiency + Category activity) */
     .window-toggle { display: inline-flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
@@ -298,6 +307,12 @@
 
   <div class="charts">
     <div class="card wide">
+      <h2>Game difficulty health</h2>
+      <p class="sub">Last 30 days. Win %, perfect %, loss %, avg score as % of cap, and a difficulty tag derived from avg %. Sorted by avg % of max — easiest games surface first. <strong>Too easy → harder puzzles. Too hard → relax penalties or smaller grids.</strong></p>
+      <div id="difficultyTable"></div>
+    </div>
+
+    <div class="card wide">
       <h2>Score distribution per game</h2>
       <p class="sub">Min, p10, median (p50), p90, max scores per game. <strong>Spread = p90 − p10.</strong> Narrow spread (everyone scores ~the same) = scoring algo lacks differentiation. Sorted by spread; needs-tuning candidates rise to the top.</p>
       <div id="scoreDistTable"></div>
@@ -375,6 +390,12 @@
       <h2>Platform by country <span class="badge-ga4">iOS + Android only</span></h2>
       <p class="sub">Top 10 countries × iOS vs Android share. HMOS not included; for HMOS-vs-rest see the Platform Split tile.</p>
       <canvas id="chartPlatformByCountry"></canvas>
+    </div>
+
+    <div class="card wide">
+      <h2>App version distribution</h2>
+      <p class="sub">Per-platform breakdown of which app version users last opened. Mint = newest, fading to grey for older. Tall mint bar = users updated quickly; long tail = users stuck on stale builds.</p>
+      <canvas id="chartAppVersion"></canvas>
     </div>
   </div>
 
